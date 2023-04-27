@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { addUser, SelectAllUsers, SelectUserByEmail } from '../store/modules/usersSlice';
 import UserType from '../types/UserType';
-import { setRememberedUser } from '../store/modules/rememberSlice';
+import { setRememberedUser } from '../store/modules/loggedUserSlice';
 
 interface FormProps {
   mode: 'signin' | 'signup';
@@ -27,7 +27,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
   const dispatch = useAppDispatch();
 
   const listUsersRedux = useAppSelector(SelectAllUsers);
-  const rememberedUser = useAppSelector((state) => state.userRemembered.user);
+  const rememberedUser = useAppSelector((state) => state.loggedUser.user);
   const existUser = useAppSelector((state) => SelectUserByEmail(state, email));
 
   const navigate = useNavigate();
@@ -114,7 +114,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
       if (remember) {
         dispatch(setRememberedUser(userFound));
       } else {
-        sessionStorage.setItem('usuarioLogado', JSON.stringify(userFound));
+        sessionStorage.setItem('loggedUser', JSON.stringify(userFound));
       }
 
       navigate('/notes');

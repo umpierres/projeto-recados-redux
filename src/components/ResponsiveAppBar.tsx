@@ -17,7 +17,7 @@ import ThemeSwitch from './ThemeSwitch';
 import { ThemeContext } from '../ThemeContext';
 
 import { loggedInRoutes } from '../routes/routes';
-import { setRememberedUser } from '../store/modules/rememberSlice';
+import { setRememberedUser } from '../store/modules/loggedUserSlice';
 import { useAppDispatch } from '../store/hooks';
 
 interface ResponsiveAppBarProps {
@@ -141,7 +141,7 @@ const ResponsiveAppBar: React.FC<ResponsiveAppBarProps> = ({ mode }) => {
                     onClick={() => {
                       const cleanUser = { email: '', password: '', tasks: [] };
                       dispatch(setRememberedUser(cleanUser));
-                      sessionStorage.removeItem('usuarioLogado');
+                      sessionStorage.removeItem('loggedUser');
                       navigate('/');
                     }}
                   />

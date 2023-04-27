@@ -9,7 +9,7 @@ import { useAppSelector } from '../store/hooks';
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  const rememberedUser = useAppSelector((state) => state.userRemembered.user);
+  const rememberedUser = useAppSelector((state) => state.loggedUser.user);
   useEffect(() => {
     if (!(rememberedUser.email === '')) {
       navigate('/notes');

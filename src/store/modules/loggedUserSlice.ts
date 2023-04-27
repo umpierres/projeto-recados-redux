@@ -7,7 +7,7 @@ interface UserState {
 const initialState: UserState = {
   user: { email: '', password: '', tasks: [] },
 };
-export const userRemember = createSlice({
+export const loggedUserSlice = createSlice({
   name: 'userRemembered',
   initialState,
   reducers: {
@@ -19,6 +19,6 @@ export const userRemember = createSlice({
   },
 });
 
-export default userRemember.reducer;
+export default loggedUserSlice.reducer;
 
-export const { setRememberedUser } = userRemember.actions;
+export const { setRememberedUser } = loggedUserSlice.actions;

@@ -11,8 +11,8 @@ import { useAppSelector } from '../store/hooks';
 const Notes: React.FC = () => {
   const navigate = useNavigate();
 
-  const rememberedLoggedUser = useAppSelector((state) => state.userRemembered.user);
-  const loggedUser = sessionStorage.getItem('usuarioLogado');
+  const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
+  const loggedUser = sessionStorage.getItem('loggedUser');
 
   useEffect(() => {
     if (rememberedLoggedUser.email === '') {
