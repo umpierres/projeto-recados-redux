@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 
 import {
-  Button, Container, Divider, Fab, Grid, Typography,
+  Container, Divider, Fab, Grid, Typography,
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +29,6 @@ const Notes: React.FC = () => {
         <Grid item xs={12}>
           <Container sx={{ marginTop: '20px' }}>
             <Typography variant="h4">Meus recados:</Typography>
-            <Button>Sair</Button>
             <Divider />
           </Container>
         </Grid>
