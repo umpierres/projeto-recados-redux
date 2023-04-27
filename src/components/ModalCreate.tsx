@@ -28,7 +28,7 @@ export const ModalCreate: React.FC<ModalCreateProps> = ({ open /* , actionConfir
           <TextField autoFocus margin="dense" id="name" label="Email Address" type="email" fullWidth variant="standard" />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>Cance</Button>
           <Button>Subscribe</Button>
         </DialogActions>
       </Dialog>
