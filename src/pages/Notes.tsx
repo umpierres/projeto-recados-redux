@@ -6,12 +6,11 @@ import {
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ModalCreate } from '../components/ModalCreate';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setRememberedUser } from '../store/modules/rememberSlice';
+import { useAppSelector } from '../store/hooks';
 
 const Notes: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+
   const rememberedLoggedUser = useAppSelector((state) => state.userRemembered.user);
   const loggedUser = sessionStorage.getItem('usuarioLogado');
 
@@ -30,16 +29,7 @@ const Notes: React.FC = () => {
         <Grid item xs={12}>
           <Container sx={{ marginTop: '20px' }}>
             <Typography variant="h4">Meus recados:</Typography>
-            <Button
-              onClick={() => {
-                const cleanUser = { email: '', password: '', tasks: [] };
-                dispatch(setRememberedUser(cleanUser));
-                sessionStorage.removeItem('usuarioLogado');
-                navigate('/');
-              }}
-            >
-              Sair
-            </Button>
+            <Button>Sair</Button>
             <Divider />
           </Container>
         </Grid>
