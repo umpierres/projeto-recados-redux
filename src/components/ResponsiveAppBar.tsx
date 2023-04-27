@@ -10,12 +10,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { useNavigate } from 'react-router-dom';
 import ThemeSwitch from './ThemeSwitch';
 import { ThemeContext } from '../ThemeContext';
 
 import { loggedInRoutes } from '../routes/routes';
+import { setRememberedUser } from '../store/modules/rememberSlice';
+import { useAppDispatch } from '../store/hooks';
 
 interface ResponsiveAppBarProps {
   mode: 'loggedOut' | 'loggedIn';
@@ -23,6 +26,7 @@ interface ResponsiveAppBarProps {
 
 const ResponsiveAppBar: React.FC<ResponsiveAppBarProps> = ({ mode }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -119,11 +123,7 @@ const ResponsiveAppBar: React.FC<ResponsiveAppBarProps> = ({ mode }) => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {mode === 'loggedIn'
               && loggedInRoutes.map((page) => (
-                <Button
-                  key={page.url}
-                  onClick={() => handleCloseNavMenu(page.url)}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
+                <Button key={page.url} onClick={() => handleCloseNavMenu(page.url)} sx={{ my: 2, color: 'white', display: 'block' }}>
                   {page.label}
                 </Button>
               ))}
@@ -134,6 +134,20 @@ const ResponsiveAppBar: React.FC<ResponsiveAppBarProps> = ({ mode }) => {
                 <ThemeSwitch checked={isDarkMode} onChange={toggleDarkMode} />
               </IconButton>
             </Tooltip>
+            {mode === 'loggedIn' && (
+              <Tooltip title="Sair">
+                <IconButton sx={{ p: 0 }}>
+                  <NoMeetingRoomIcon
+                    onClick={() => {
+                      const cleanUser = { email: '', password: '', tasks: [] };
+                      dispatch(setRememberedUser(cleanUser));
+                      sessionStorage.removeItem('usuarioLogado');
+                      navigate('/');
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
           </Box>
         </Toolbar>
       </Container>
