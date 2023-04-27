@@ -6,9 +6,9 @@ const visitorRoutes = [
 ];
 
 const loggedInRoutes = [
-  { label: 'Home', url: '/' },
-  { label: 'Minha conta', url: '/my-account' },
-  { label: 'Sair', url: '/logout' },
+
+  { label: 'Todos Recados', url: '/all-task' },
+  { label: 'Favoritos', url: '/favorites' },
 ];
 
 export { visitorRoutes, loggedInRoutes };
