@@ -1,0 +1,20 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from '../pages/Home';
+import SignUp from '../pages/SignUp';
+import SignIn from '../pages/SignIn';
+import Notes from '../pages/Notes';
+import DefaultLayout from '../config/styles/layout/DefaultLayout';
+
+const AppRoutes: React.FC = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<DefaultLayout mode="loggedOut" component={Home} />} />
+      <Route path="/signup" element={<DefaultLayout mode="loggedOut" component={SignUp} />} />
+      <Route path="/signin" element={<DefaultLayout mode="loggedOut" component={SignIn} />} />
+      <Route path="/notes" element={<DefaultLayout mode="loggedIn" component={Notes} />} />
+    </Routes>
+  </BrowserRouter>
+);
+
+export default AppRoutes;
