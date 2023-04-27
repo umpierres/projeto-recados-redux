@@ -4,16 +4,18 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { visitorRoutes } from '../routes/routes';
+import { useAppSelector } from '../store/hooks';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  const usuarioLogado = localStorage.getItem('usuarioLogado') || sessionStorage.getItem('usuarioLogado');
+  const rememberedUser = useAppSelector((state) => state.userRemembered.user);
   useEffect(() => {
-    if (usuarioLogado) {
+    if (!(rememberedUser.email === '')) {
       navigate('/notes');
     }
   }, [navigate]);
+
   const getRouteUrl = (name: string) => {
     const route = visitorRoutes.find((r) => r.label === name);
     return route ? route.url : '/';
@@ -43,8 +45,8 @@ const Home: React.FC = () => {
               },
             }}
           >
-            Aqui, você pode organizar suas tarefas diárias, semanais ou mensais em um só lugar. Experimente a praticidade de ter todas as
-            suas tarefas em um só lugar e seja mais produtivo e eficiente!
+            Aqui, você pode organizar suas tarefas diárias, semanais ou mensais em um só lugar. Experimente a praticidade de ter todas as suas tarefas em um só
+            lugar e seja mais produtivo e eficiente!
           </Typography>
         </Box>
       </Grid>
