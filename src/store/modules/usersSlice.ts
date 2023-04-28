@@ -1,6 +1,5 @@
-/* eslint-disable max-len */
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import UserType from '../../types/UserType';
+import UserType from '../../types/userType';
 import { RootState } from '..';
 
 const adapter = createEntityAdapter<UserType>({ selectId: (user) => user.email });
