@@ -1,4 +1,4 @@
-import Task from './TaskType';
+import Task from './taskType';
 
 type UserType = {
     email: string;
