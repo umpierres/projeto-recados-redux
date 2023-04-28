@@ -35,7 +35,7 @@ export const ModalCreate: React.FC<ModalCreateProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={addTask}>Adicionar</Button>
+          <Button onClick={actionConfirm}>Adicionar</Button>
         </DialogActions>
       </Dialog>
     </div>
