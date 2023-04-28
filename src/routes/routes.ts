@@ -7,7 +7,7 @@ const visitorRoutes = [
 
 const loggedInRoutes = [
 
-  { label: 'Todos Recados', url: '/all-task' },
+  { label: 'Todos Recados', url: '/notes' },
   { label: 'Favoritos', url: '/favorites' },
 ];
 
