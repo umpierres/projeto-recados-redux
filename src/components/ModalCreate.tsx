@@ -15,6 +15,8 @@ interface ModalCreateProps {
   actionCancel: () => void;
 }
 
+// pegar o tasksSlice e passar os valores por essa pagina, criar states e passar os states para o adapter
+
 export const ModalCreate: React.FC<ModalCreateProps> = ({
   open, actionConfirm, actionCancel, title, description,
 }) => {
