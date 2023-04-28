@@ -136,15 +136,16 @@ const ResponsiveAppBar: React.FC<ResponsiveAppBarProps> = ({ mode }) => {
             </Tooltip>
             {mode === 'loggedIn' && (
               <Tooltip title="Sair">
-                <IconButton sx={{ p: 0 }}>
-                  <NoMeetingRoomIcon
-                    onClick={() => {
-                      const cleanUser = { email: '', password: '', tasks: [] };
-                      dispatch(setRememberedUser(cleanUser));
-                      sessionStorage.removeItem('loggedUser');
-                      navigate('/');
-                    }}
-                  />
+                <IconButton
+                  sx={{ p: 0 }}
+                  onClick={() => {
+                    const cleanUser = { email: '', password: '', tasks: [] };
+                    dispatch(setRememberedUser(cleanUser));
+                    sessionStorage.removeItem('loggedUser');
+                    navigate('/');
+                  }}
+                >
+                  <NoMeetingRoomIcon sx={{ color: '#fff' }} />
                 </IconButton>
               </Tooltip>
             )}
