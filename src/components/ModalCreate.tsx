@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -8,28 +8,34 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 interface ModalCreateProps {
+  title: string;
+  description: string;
   open: boolean;
-  /* actionConfirm: () => void;
-  actionCancel: () => void; */
+  actionConfirm?: () => void;
+  actionCancel: () => void;
 }
 
-export const ModalCreate: React.FC<ModalCreateProps> = ({ open /* , actionConfirm, actionCancel  */ }) => {
+export const ModalCreate: React.FC<ModalCreateProps> = ({
+  open, actionConfirm, actionCancel, title, description,
+}) => {
   const handleClose = () => {
-    /* actionCancel(); */
+    actionCancel();
+  };
+
+  const addTask = () => {
+    console.log('logica de cadastrar o recado');
   };
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates occasionally.
-          </DialogContentText>
+          <DialogContentText>{description}</DialogContentText>
           <TextField autoFocus margin="dense" id="name" label="Email Address" type="email" fullWidth variant="standard" />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cance</Button>
-          <Button>Subscribe</Button>
+          <Button onClick={handleClose}>Cancelar</Button>
+          <Button onClick={addTask}>Adicionar</Button>
         </DialogActions>
       </Dialog>
     </div>
