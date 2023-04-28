@@ -8,7 +8,7 @@ interface DefaultLayoutProps {
 }
 
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({ component: Component, mode }) => (
-  <Grid container justifyContent="space-between" style={{ height: '100vh' }}>
+  <Grid container justifyContent="space-between" height="100vh">
     <Grid item xs={12}>
       <ResponsiveAppBar mode={mode} />
     </Grid>
