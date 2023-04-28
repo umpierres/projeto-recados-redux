@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { addUser, SelectAllUsers, SelectUserByEmail } from '../store/modules/usersSlice';
-import UserType from '../types/UserType';
+import UserType from '../types/userType';
 import { setRememberedUser } from '../store/modules/loggedUserSlice';
 
 interface FormProps {
