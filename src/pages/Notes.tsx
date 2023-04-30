@@ -6,9 +6,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ModalCreate } from '../components/ModalCreate';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../store/hooks';
 import BasicCard from '../components/BasicCard';
-import { SelectAllTasks, addTask } from '../store/modules/tasksSlice';
+import { SelectAllTasks } from '../store/modules/tasksSlice';
 
 const Notes: React.FC = () => {
   const navigate = useNavigate();
@@ -16,12 +16,8 @@ const Notes: React.FC = () => {
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
   const loggedUser = sessionStorage.getItem('loggedUser');
 
-  const dispatch = useAppDispatch();
-
   const allTasks = useAppSelector(SelectAllTasks);
   const userLoggedTasks = allTasks.filter((task) => task?.owner === rememberedLoggedUser.email);
-  console.log(userLoggedTasks);
-  console.log(allTasks);
 
   useEffect(() => {
     if (rememberedLoggedUser.email === '') {
@@ -35,18 +31,7 @@ const Notes: React.FC = () => {
     setOpenModal(false);
   };
 
-  const handleConfirm = () => {
-    dispatch(
-      addTask({
-        id: Date.now(),
-        task: 'Roda roda',
-        detail: 'blablalblallbllal',
-        favorite: false,
-        time: 'Date.now()',
-        date: '23/02/32',
-        owner: 'e2u@gmail.com',
-      }),
-    );
+  const actionConfirm = () => {
     setOpenModal(false);
   };
 
@@ -55,7 +40,7 @@ const Notes: React.FC = () => {
       <ModalCreate
         open={openModal}
         actionCancel={handleClose}
-        actionConfirm={handleConfirm}
+        actionConfirm={actionConfirm}
         description="Digite o titulo e descrição do seu recado"
         title="Crie o seu recado"
       />
