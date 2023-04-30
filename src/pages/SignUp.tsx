@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { Grid } from '@mui/material';
 import { Form } from '../components/Form';
-import { useAppSelector } from '../store/hooks';
 
 const alignCenter = {
   display: 'flex',
@@ -11,22 +9,12 @@ const alignCenter = {
   alignItems: 'center',
 };
 
-const SignUp: React.FC = () => {
-  const navigate = useNavigate();
-
-  const rememberedUser = useAppSelector((state) => state.loggedUser.user);
-  useEffect(() => {
-    if (!(rememberedUser.email === '')) {
-      navigate('/notes');
-    }
-  }, [navigate]);
-  return (
-    <Grid container sx={alignCenter}>
-      <Grid item xs={12} md={4} lg={3}>
-        <Form mode="signup" textButton="Enviar" textTitle="SE CADASTRE" />
-      </Grid>
+const SignUp: React.FC = () => (
+  <Grid container sx={alignCenter}>
+    <Grid item xs={12} md={4} lg={3}>
+      <Form mode="signup" textButton="Enviar" textTitle="SE CADASTRE" />
     </Grid>
-  );
-};
+  </Grid>
+);
 
 export default SignUp;
