@@ -120,9 +120,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
         }, 1000);
         return;
       }
-      userFound.remember = remember;
-
-      dispatch(setRememberedUser(userFound));
+      dispatch(setRememberedUser({ email: userFound.email, password: userFound.password, remember }));
       navigate('/notes');
     }
   }
