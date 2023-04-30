@@ -14,16 +14,13 @@ const Notes: React.FC = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
-  const loggedUser = sessionStorage.getItem('loggedUser');
 
   const allTasks = useAppSelector(SelectAllTasks);
   const userLoggedTasks = allTasks.filter((task) => task?.owner === rememberedLoggedUser.email);
 
   useEffect(() => {
     if (rememberedLoggedUser.email === '') {
-      if (!loggedUser) {
-        navigate('/');
-      }
+      navigate('/');
     }
   }, [navigate]);
 
@@ -53,9 +50,9 @@ const Notes: React.FC = () => {
         </Grid>
 
         {userLoggedTasks.map((task) => (
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} md={6} lg={3} key={task?.id}>
             <Container sx={{ marginTop: '20px' }}>
-              <BasicCard key={task?.id} title={task?.task} detail={task?.detail} time={task?.time} date={task?.date} />
+              <BasicCard title={task?.task} detail={task?.detail} date={task?.date} />
             </Container>
           </Grid>
         ))}

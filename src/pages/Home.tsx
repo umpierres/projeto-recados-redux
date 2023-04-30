@@ -11,7 +11,7 @@ const Home: React.FC = () => {
 
   const rememberedUser = useAppSelector((state) => state.loggedUser.user);
   useEffect(() => {
-    if (!(rememberedUser.email === '')) {
+    if (rememberedUser.remember) {
       navigate('/notes');
     }
   }, [navigate]);
