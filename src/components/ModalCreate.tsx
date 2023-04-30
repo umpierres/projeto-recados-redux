@@ -18,7 +18,7 @@ interface ModalCreateProps {
   actionCancel: () => void;
 }
 
-export const ModalCreate: React.FC<ModalCreateProps> = ({
+const ModalCreate: React.FC<ModalCreateProps> = ({
   open, actionConfirm, actionCancel, title, description,
 }) => {
   const [taskTitle, setTaskTitle] = useState<string>('');
@@ -90,3 +90,5 @@ export const ModalCreate: React.FC<ModalCreateProps> = ({
     </div>
   );
 };
+
+export default ModalCreate;
