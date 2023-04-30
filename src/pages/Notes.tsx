@@ -10,14 +10,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import ModalDelete from '../components/ModalDelete';
-import { ModalCreate } from '../components/ModalCreate';
+import ModalCreate from '../components/ModalCreate';
+import ModalEdit from '../components/ModalEdit';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { SelectAllTasks, removeTask } from '../store/modules/tasksSlice';
+import TaskType from '../types/taskType';
 
 const Notes: React.FC = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
+  const [editingTask, setEditingTask] = useState<TaskType | null>(null);
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
 
   const allTasks = useAppSelector(SelectAllTasks);
@@ -39,10 +43,17 @@ const Notes: React.FC = () => {
   const handleClose = () => {
     setOpenModal(false);
     setOpenModalDelete(false);
+    setOpenModalEdit(false);
   };
 
   const actionConfirm = () => {
     setOpenModal(false);
+    setOpenModalEdit(false);
+  };
+
+  const handleEdit = (task: TaskType) => {
+    setEditingTask(task);
+    setOpenModalEdit(true);
   };
 
   return (
@@ -66,6 +77,7 @@ const Notes: React.FC = () => {
         {userLoggedTasks.map((task) => (
           <Grid item xs={12} md={6} lg={3} key={task?.id}>
             <ModalDelete openModal={openModalDelete} actionCancel={handleClose} removeTask={handleDelete} id={task?.id} />
+            <ModalEdit task={editingTask || task} open={openModalEdit} actionCancel={handleClose} actionConfirm={actionConfirm} />
             <Container sx={{ marginTop: '20px' }}>
               <Card sx={{ minWidth: 275 }}>
                 <CardContent>
@@ -83,7 +95,12 @@ const Notes: React.FC = () => {
                   <Button size="small">
                     <FavoriteIcon sx={{ color: 'text.secondary' }} />
                   </Button>
-                  <Button size="small">
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      handleEdit(task);
+                    }}
+                  >
                     <EditIcon sx={{ color: 'text.secondary' }} />
                   </Button>
                   <Button
