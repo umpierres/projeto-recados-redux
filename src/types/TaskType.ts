@@ -3,7 +3,6 @@ type TaskType = {
     task: string;
     detail: string;
     favorite: boolean;
-    time:string;
     date: any;
     owner:string;
 };
