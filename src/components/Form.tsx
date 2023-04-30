@@ -34,10 +34,20 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
 
   useEffect(() => {
     // redirecionamento do remember
-    if (rememberedUser.email !== '') {
+    if (rememberedUser.remember) {
       navigate('/notes');
     }
   }, [navigate]);
+
+  if (!rememberedUser.remember) {
+    const cleanUser = {
+      email: '',
+      password: '',
+      tasks: [],
+      remember: false,
+    };
+    dispatch(setRememberedUser(cleanUser));
+  }
 
   useEffect(() => {
     // Validação de entradas login
@@ -68,7 +78,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
       const newUser: UserType = {
         email,
         password,
-        tasks: [],
+        remember,
       };
 
       if (existUser) {
@@ -110,13 +120,9 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
         }, 1000);
         return;
       }
+      userFound.remember = remember;
 
-      if (remember) {
-        dispatch(setRememberedUser(userFound));
-      } else {
-        sessionStorage.setItem('loggedUser', JSON.stringify(userFound));
-      }
-
+      dispatch(setRememberedUser(userFound));
       navigate('/notes');
     }
   }
