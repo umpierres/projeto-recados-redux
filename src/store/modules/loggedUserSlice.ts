@@ -5,7 +5,9 @@ interface UserState {
     user: UserType;
 }
 const initialState: UserState = {
-  user: { email: '', password: '', tasks: [] },
+  user: {
+    email: '', password: '', remember: false,
+  },
 };
 export const loggedUserSlice = createSlice({
   name: 'userRemembered',
@@ -14,7 +16,7 @@ export const loggedUserSlice = createSlice({
     setRememberedUser: (state, action: PayloadAction<UserType>) => {
       state.user.email = action.payload.email;
       state.user.password = action.payload.password;
-      state.user.tasks.push(...action.payload.tasks);
+      state.user.remember = action.payload.remember;
     },
   },
 });
