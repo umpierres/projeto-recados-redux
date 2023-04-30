@@ -1,9 +1,7 @@
-import Task from './taskType';
-
 type UserType = {
     email: string;
     password: string;
-    tasks: Task[];
+    remember:boolean
 };
 
 export default UserType;
