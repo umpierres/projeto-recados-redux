@@ -18,13 +18,11 @@ interface ModalCreateProps {
   actionCancel: () => void;
 }
 
-// pegar o tasksSlice e passar os valores por essa pagina, criar states e passar os states para o adapter
-
 export const ModalCreate: React.FC<ModalCreateProps> = ({
   open, actionConfirm, actionCancel, title, description,
 }) => {
-  const [taskTitle, setTaskTitle] = useState<string>('aaaaa');
-  const [taskDescription, setTaskDescription] = useState<string>('aaaaaa');
+  const [taskTitle, setTaskTitle] = useState<string>('');
+  const [taskDescription, setTaskDescription] = useState<string>('');
 
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
 
@@ -32,20 +30,23 @@ export const ModalCreate: React.FC<ModalCreateProps> = ({
 
   const handleClose = () => {
     actionCancel();
+    setTaskTitle('');
+    setTaskDescription('');
   };
   const handleConfirm = () => {
     const data = new Date().toLocaleString();
     const newTask: Task = {
       id: Date.now(),
-      task: taskTitle,
+      title: taskTitle,
       detail: taskDescription,
       favorite: false,
       date: `${data}`,
       owner: `${rememberedLoggedUser.email}`,
     };
-    console.log(newTask.owner);
     dispatch(addTask(newTask));
     actionConfirm();
+    setTaskTitle('');
+    setTaskDescription('');
   };
 
   return (
@@ -54,14 +55,34 @@ export const ModalCreate: React.FC<ModalCreateProps> = ({
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{description}</DialogContentText>
-          <TextField autoFocus margin="dense" id="title" label="Titulo do recado" type="text" fullWidth variant="standard" />
-          <TextField autoFocus margin="dense" id="detail" label="Descrição do recado" type="text" fullWidth variant="standard" />
+          <TextField
+            required
+            margin="dense"
+            value={taskTitle}
+            onChange={(ev) => setTaskTitle(ev.target.value)}
+            id="title"
+            label="Titulo do recado"
+            type="text"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            required
+            margin="dense"
+            value={taskDescription}
+            onChange={(ev) => setTaskDescription(ev.target.value)}
+            id="detail"
+            label="Descrição do recado"
+            type="text"
+            fullWidth
+            variant="standard"
+          />
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: 'text.secondary' }} onClick={handleClose}>
             Cancelar
           </Button>
-          <Button sx={{ color: 'text.secondary' }} onClick={handleConfirm}>
+          <Button sx={{ color: 'text.secondary' }} onClick={handleConfirm} disabled={!taskTitle || !taskDescription}>
             Adicionar
           </Button>
         </DialogActions>
