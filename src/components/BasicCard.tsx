@@ -11,19 +11,16 @@ interface BasicCardProps {
   title: string;
   detail: string;
   date: string;
-  time: string;
 }
 
-const BasicCard: React.FC<BasicCardProps> = ({
-  title, detail, date, time,
-}) => (
+const BasicCard: React.FC<BasicCardProps> = ({ title, detail, date }) => (
   <Card sx={{ minWidth: 275 }}>
     <CardContent>
       <Typography variant="h5" component="div">
         {title}
       </Typography>
       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        {date}, {time}
+        {date}
       </Typography>
       <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>
         {detail}
