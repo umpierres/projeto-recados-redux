@@ -1,6 +1,6 @@
 type TaskType = {
     id: number;
-    task: string;
+    title: string;
     detail: string;
     favorite: boolean;
     date: any;
