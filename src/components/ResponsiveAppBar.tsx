@@ -139,9 +139,14 @@ const ResponsiveAppBar: React.FC<ResponsiveAppBarProps> = ({ mode }) => {
                 <IconButton
                   sx={{ p: 0 }}
                   onClick={() => {
-                    const cleanUser = { email: '', password: '', tasks: [] };
+                    const cleanUser = {
+                      email: '',
+                      password: '',
+                      tasks: [],
+                      remember: false,
+                    };
                     dispatch(setRememberedUser(cleanUser));
-                    sessionStorage.removeItem('loggedUser');
+
                     navigate('/');
                   }}
                 >
