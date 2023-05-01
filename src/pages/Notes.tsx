@@ -23,14 +23,13 @@ const Notes: React.FC = () => {
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
   const [taskValue, setTaskValue] = useState<TaskType>({
-    id: Date.now(),
+    id: 0,
     title: '',
     detail: '',
     favorite: false,
     date: '',
     owner: '',
   });
-  const [editingTask, setEditingTask] = useState<TaskType | null>(null);
   const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
 
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
@@ -56,7 +55,7 @@ const Notes: React.FC = () => {
   };
 
   const handleEdit = (task: TaskType) => {
-    setEditingTask(task);
+    setTaskValue(task);
     setOpenModalEdit(true);
   };
 
@@ -119,7 +118,6 @@ const Notes: React.FC = () => {
                   <IconButton
                     size="small"
                     onClick={() => {
-                      setTaskValue(task);
                       handleEdit(task);
                     }}
                   >
@@ -140,8 +138,8 @@ const Notes: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} TaskId={taskValue?.id!} />
-      <ModalEdit task={editingTask || taskValue} open={openModalEdit} actionCancel={handleClose} actionConfirm={actionConfirm} />
+      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} TaskId={taskValue.id} />
+      <ModalEdit task={taskValue} open={openModalEdit} actionCancel={handleClose} actionConfirm={actionConfirm} />
       <Fab
         color="primary"
         aria-label="add"

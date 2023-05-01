@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -22,9 +22,12 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 }) => {
   const [taskTitle, setTaskTitle] = useState<string>(task.title);
   const [taskDescription, setTaskDescription] = useState<string>(task.detail);
+  useEffect(() => {
+    setTaskTitle(task.title);
+    setTaskDescription(task.detail);
+  }, [task]);
 
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
-
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
@@ -36,8 +39,8 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     const data = new Date().toLocaleString();
     const updatedTask: Task = {
       ...task,
-      title: taskTitle,
-      detail: taskDescription,
+      title: taskTitle!,
+      detail: taskDescription!,
       date: `${data}`,
       owner: `${rememberedLoggedUser.email}`,
     };
