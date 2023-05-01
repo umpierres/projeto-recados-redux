@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -23,6 +23,29 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
 }) => {
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [taskDescription, setTaskDescription] = useState<string>('');
+  const [titleError, setTitleError] = useState<boolean>(false);
+  const [titleHelperText, setTitleHelperText] = useState<string>('');
+  const [descriptionError, setDescriptionError] = useState<boolean>(false);
+  const [descriptionHelperText, setDescriptionHelperText] = useState<string>('');
+
+  useEffect(() => {
+    if (taskDescription.length > 100) {
+      setDescriptionError(true);
+      setDescriptionHelperText('Ultrapassou limite de caracteres');
+    } else {
+      setDescriptionError(false);
+      setDescriptionHelperText('');
+    }
+  }, [taskDescription]);
+  useEffect(() => {
+    if (taskTitle.length > 30) {
+      setTitleError(true);
+      setTitleHelperText('Ultrapassou limite de caracteres');
+    } else {
+      setTitleError(false);
+      setTitleHelperText('');
+    }
+  }, [taskTitle]);
 
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
 
@@ -56,6 +79,8 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
         <DialogContent>
           <DialogContentText>{description}</DialogContentText>
           <TextField
+            error={titleError}
+            helperText={titleHelperText}
             required
             margin="dense"
             value={taskTitle}
@@ -67,6 +92,8 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
             variant="standard"
           />
           <TextField
+            error={descriptionError}
+            helperText={descriptionHelperText}
             required
             margin="dense"
             value={taskDescription}

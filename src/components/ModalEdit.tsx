@@ -22,10 +22,34 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 }) => {
   const [taskTitle, setTaskTitle] = useState<string>(task.title);
   const [taskDescription, setTaskDescription] = useState<string>(task.detail);
+  const [titleError, setTitleError] = useState<boolean>(false);
+  const [titleHelperText, setTitleHelperText] = useState<string>('');
+  const [descriptionError, setDescriptionError] = useState<boolean>(false);
+  const [descriptionHelperText, setDescriptionHelperText] = useState<string>('');
+
   useEffect(() => {
     setTaskTitle(task.title);
     setTaskDescription(task.detail);
   }, [task]);
+
+  useEffect(() => {
+    if (taskDescription.length > 100) {
+      setDescriptionError(true);
+      setDescriptionHelperText('Ultrapassou limite de caracteres');
+    } else {
+      setDescriptionError(false);
+      setDescriptionHelperText('');
+    }
+  }, [taskDescription]);
+  useEffect(() => {
+    if (taskTitle.length > 30) {
+      setTitleError(true);
+      setTitleHelperText('Ultrapassou limite de caracteres');
+    } else {
+      setTitleError(false);
+      setTitleHelperText('');
+    }
+  }, [taskTitle]);
 
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
   const dispatch = useAppDispatch();
@@ -55,10 +79,14 @@ const ModalEdit: React.FC<ModalEditProps> = ({
         <DialogContent>
           <DialogContentText>Atualize os dados da tarefa:</DialogContentText>
           <TextField
+            error={titleError}
+            helperText={titleHelperText}
             required
             margin="dense"
             value={taskTitle}
-            onChange={(ev) => setTaskTitle(ev.target.value)}
+            onChange={(ev) => {
+              setTaskTitle(ev.target.value);
+            }}
             id="title"
             label="Título da Tarefa"
             type="text"
@@ -66,6 +94,8 @@ const ModalEdit: React.FC<ModalEditProps> = ({
             variant="standard"
           />
           <TextField
+            error={descriptionError}
+            helperText={descriptionHelperText}
             required
             margin="dense"
             value={taskDescription}
@@ -81,7 +111,11 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           <Button sx={{ color: 'text.secondary' }} onClick={handleClose}>
             Cancelar
           </Button>
-          <Button sx={{ color: 'text.secondary' }} onClick={handleConfirm} disabled={!taskTitle || !taskDescription}>
+          <Button
+            sx={{ color: 'text.secondary' }}
+            onClick={handleConfirm}
+            disabled={!taskTitle || !taskDescription || taskTitle.length > 30 || taskDescription.length > 100}
+          >
             Salvar
           </Button>
         </DialogActions>
