@@ -82,7 +82,11 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
           <Button sx={{ color: 'text.secondary' }} onClick={handleClose}>
             Cancelar
           </Button>
-          <Button sx={{ color: 'text.secondary' }} onClick={handleConfirm} disabled={!taskTitle || !taskDescription}>
+          <Button
+            sx={{ color: 'text.secondary' }}
+            onClick={handleConfirm}
+            disabled={!taskTitle || !taskDescription || taskTitle.length > 30 || taskDescription.length > 100}
+          >
             Adicionar
           </Button>
         </DialogActions>
