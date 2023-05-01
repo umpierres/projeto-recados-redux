@@ -1,5 +1,5 @@
 import {
-  Box, Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography, Alert,
+  Box, Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { addUser, SelectAllUsers, SelectUserByEmail } from '../store/modules/usersSlice';
 import UserType from '../types/userType';
 import { setRememberedUser } from '../store/modules/loggedUserSlice';
+import AlertComponent from './Alert';
 
 interface FormProps {
   mode: 'signin' | 'signup';
@@ -23,7 +24,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorRepassword, setErrorRepassword] = useState(false);
-  const [showAlert, setShowAlert] = useState({ success: false, texto: '', display: 'none' });
+  const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
   const dispatch = useAppDispatch();
 
   const listUsersRedux = useAppSelector(SelectAllUsers);
@@ -85,22 +86,22 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
         setShowAlert({
           display: 'show',
           success: false,
-          texto: 'Esse e-mail já está cadastrado!',
+          text: 'Esse e-mail já está cadastrado!',
         });
         setTimeout(() => {
-          setShowAlert({ display: 'none', success: true, texto: '' });
+          setShowAlert({ display: 'none', success: true, text: '' });
         }, 1000);
         return;
       }
       dispatch(addUser(newUser));
 
-      setShowAlert({ display: 'show', success: true, texto: 'Usuario criado com sucesso' });
+      setShowAlert({ display: 'show', success: true, text: 'Usuario criado com sucesso' });
       setEmail('');
       setPassword('');
       setRepassword('');
 
       setTimeout(() => {
-        setShowAlert({ display: 'none', success: true, texto: '' });
+        setShowAlert({ display: 'none', success: true, text: '' });
       }, 1000);
       setTimeout(() => {
         navigate('/signin');
@@ -113,10 +114,10 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
         setShowAlert({
           display: 'show',
           success: false,
-          texto: 'E-mail ou senha inválidos!',
+          text: 'E-mail ou senha inválidos!',
         });
         setTimeout(() => {
-          setShowAlert({ display: 'none', success: true, texto: '' });
+          setShowAlert({ display: 'none', success: true, text: '' });
         }, 1000);
         return;
       }
@@ -127,17 +128,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
 
   return (
     <Box>
-      <Alert
-        sx={{
-          display: showAlert.display,
-          position: 'absolute',
-          top: '10%',
-          right: '1%',
-        }}
-        severity={showAlert.success ? 'success' : 'error'}
-      >
-        {showAlert.texto}
-      </Alert>
+      <AlertComponent success={showAlert.success} text={showAlert.text} display={showAlert.display} />
       <Box
         sx={{
           display: 'flex',
