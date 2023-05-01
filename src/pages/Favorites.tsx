@@ -1,7 +1,5 @@
-import AddIcon from '@mui/icons-material/Add';
-
 import {
-  Container, Divider, Fab, Grid, Card, CardActions, CardContent, Typography, IconButton,
+  Container, Divider, Pagination, Grid, Card, CardActions, CardContent, Typography, IconButton,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -9,9 +7,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
-
 import ModalDelete from '../components/ModalDelete';
-import ModalCreate from '../components/ModalCreate';
 import ModalEdit from '../components/ModalEdit';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { SelectAllTasks, editTask } from '../store/modules/tasksSlice';
@@ -31,11 +27,17 @@ const Notes: React.FC = () => {
     owner: '',
   });
   const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
 
   const dispatch = useAppDispatch();
   const userLoggedTasks = useAppSelector(SelectAllTasks).filter((task) => task.owner === rememberedLoggedUser.email);
+  const favoriteTasks = useMemo(() => userLoggedTasks?.filter((item) => item.favorite === true), [userLoggedTasks]);
+  const currentTasks = favoriteTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const totalPages = Math.ceil(favoriteTasks.length / itemsPerPage);
 
   const handleClose = () => {
     setOpenModalDelete(false);
@@ -44,6 +46,10 @@ const Notes: React.FC = () => {
 
   const actionConfirm = () => {
     setOpenModalEdit(false);
+    setShowAlert({ success: true, text: 'Recado adicionado com sucesso', display: 'block' });
+    setTimeout(() => {
+      setShowAlert({ display: 'none', success: true, text: '' });
+    }, 1000);
   };
 
   const handleEdit = (task: TaskType) => {
@@ -62,7 +68,10 @@ const Notes: React.FC = () => {
       );
     }
   };
-  const favoriteTasks = useMemo(() => userLoggedTasks?.filter((item) => item.favorite === true), [userLoggedTasks]);
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+  };
 
   useEffect(() => {
     if (rememberedLoggedUser.email === '') {
@@ -81,7 +90,7 @@ const Notes: React.FC = () => {
           </Container>
         </Grid>
 
-        {favoriteTasks.map((task) => (
+        {currentTasks.map((task) => (
           <Grid item xs={12} md={6} lg={3} key={task?.id}>
             <Container sx={{ marginTop: '20px' }}>
               <Card sx={{ minWidth: 275 }}>
@@ -123,7 +132,9 @@ const Notes: React.FC = () => {
             </Container>
           </Grid>
         ))}
-        <Grid item xs={12} sx={{ position: 'fixed', bottom: '20px', right: '50%' }} />
+        <Grid item xs={12} position="fixed" right="50%" bottom="20px">
+          <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} />
+        </Grid>
       </Grid>
       <ModalDelete openModal={openModalDelete} actionCancel={handleClose} TaskId={taskValue.id} />
       <ModalEdit task={taskValue} open={openModalEdit} actionCancel={handleClose} actionConfirm={actionConfirm} />
