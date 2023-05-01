@@ -3,12 +3,13 @@ import AddIcon from '@mui/icons-material/Add';
 import {
   Container, Divider, Fab, Grid, Card, CardActions, CardContent, Typography, IconButton,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
+
 import ModalDelete from '../components/ModalDelete';
 import ModalCreate from '../components/ModalCreate';
 import ModalEdit from '../components/ModalEdit';
@@ -22,27 +23,13 @@ const Notes: React.FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
-  const [taskValue, setTaskValue] = useState<TaskType>({
-    id: Date.now(),
-    title: '',
-    detail: '',
-    favorite: false,
-    date: '',
-    owner: '',
-  });
   const [editingTask, setEditingTask] = useState<TaskType | null>(null);
   const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
 
   const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
 
-  const userLoggedTasks = useAppSelector(SelectAllTasks).filter((task) => task.owner === rememberedLoggedUser.email);
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (rememberedLoggedUser.email === '') {
-      navigate('/');
-    }
-  }, [navigate]);
+  const userLoggedTasks = useAppSelector(SelectAllTasks).filter((task) => task.owner === rememberedLoggedUser.email);
 
   const handleClose = () => {
     setOpenModal(false);
@@ -71,6 +58,7 @@ const Notes: React.FC = () => {
       );
     }
   };
+  const favoriteTasks = useMemo(() => userLoggedTasks?.filter((item) => item.favorite === true), [userLoggedTasks]);
 
   useEffect(() => {
     if (rememberedLoggedUser.email === '') {
@@ -90,15 +78,17 @@ const Notes: React.FC = () => {
       />
 
       <Grid container>
-        <Grid item xs={12}>
+        <Grid item xs={12} m={5}>
           <Container>
-            <Typography variant="h4">Meus recados:</Typography>
+            <Typography variant="h4">Meus Favoritos:</Typography>
             <Divider />
           </Container>
         </Grid>
 
-        {userLoggedTasks.map((task) => (
+        {favoriteTasks.map((task) => (
           <Grid item xs={12} md={6} lg={3} key={task?.id}>
+            <ModalDelete openModal={openModalDelete} actionCancel={handleClose} TaskId={task?.id} />
+            <ModalEdit task={editingTask || task} open={openModalEdit} actionCancel={handleClose} actionConfirm={actionConfirm} />
             <Container sx={{ marginTop: '20px' }}>
               <Card sx={{ minWidth: 275 }}>
                 <CardContent>
@@ -116,10 +106,10 @@ const Notes: React.FC = () => {
                   <IconButton color={task.favorite ? 'error' : 'inherit'} onClick={() => handleToggleFavorite(task.id)}>
                     {task.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                   </IconButton>
+
                   <IconButton
                     size="small"
                     onClick={() => {
-                      setTaskValue(task);
                       handleEdit(task);
                     }}
                   >
@@ -129,7 +119,6 @@ const Notes: React.FC = () => {
                     size="small"
                     onClick={() => {
                       setOpenModalDelete(true);
-                      setTaskValue(task);
                     }}
                   >
                     <DeleteIcon sx={{ color: 'text.secondary' }} />
@@ -139,9 +128,8 @@ const Notes: React.FC = () => {
             </Container>
           </Grid>
         ))}
+        <Grid item xs={12} sx={{ position: 'fixed', bottom: '20px', right: '50%' }} />
       </Grid>
-      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} TaskId={taskValue?.id!} />
-      <ModalEdit task={editingTask || taskValue} open={openModalEdit} actionCancel={handleClose} actionConfirm={actionConfirm} />
       <Fab
         color="primary"
         aria-label="add"
