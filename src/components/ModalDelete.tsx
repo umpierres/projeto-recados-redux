@@ -28,8 +28,10 @@ const ModalDelete: React.FC<ModalDeleteProps> = ({ openModal, actionCancel, Task
       <DialogTitle id="alert-dialog-title">Deseja deletar esse recado?</DialogTitle>
 
       <DialogActions>
-        <Button onClick={handleClose}>Cancelar</Button>
-        <Button onClick={handleDelete} autoFocus>
+        <Button sx={{ color: 'text.secondary' }} onClick={handleClose}>
+          Cancelar
+        </Button>
+        <Button sx={{ color: 'text.secondary' }} onClick={handleDelete} autoFocus>
           Confirmar
         </Button>
       </DialogActions>
