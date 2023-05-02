@@ -6,5 +6,4 @@ Link para acesso à aplicação na nuvem (Vercel) -> https://recados-front3-verc
 
 
 
- <img src="https://user-images.githubusercontent.com/101207554/235761568-51b79716-52a5-494b-8038-da75ea368f19.gif" />
-
+![Animação](https://user-images.githubusercontent.com/101207554/235770811-183b53f8-9db4-4d71-ac6c-238491bf105d.gif)
