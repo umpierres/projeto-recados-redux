@@ -51,7 +51,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
       setDisable(!(emailValid && passwordValid && repasswordValid));
     } else if (mode === 'signin') {
       const emailValid = email.endsWith('.com') || (email.endsWith('.com.br') && email.includes('@'));
-      const passwordValid = password.length >= 0;
+      const passwordValid = password.length < 0;
       if (email.length > 0) {
         setErrorEmail(!emailValid);
       }
