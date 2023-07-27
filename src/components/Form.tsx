@@ -25,30 +25,9 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorRepassword, setErrorRepassword] = useState(false);
   const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
+
   const dispatch = useAppDispatch();
-
-  const listUsersRedux = useAppSelector(SelectAllUsers);
-  const rememberedUser = useAppSelector((state) => state.loggedUser.user);
-  const existUser = useAppSelector((state) => SelectUserByEmail(state, email));
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // redirecionamento do remember
-    if (rememberedUser.remember) {
-      navigate('/notes');
-    }
-  }, [navigate]);
-
-  if (!rememberedUser.remember) {
-    const cleanUser = {
-      email: '',
-      password: '',
-      tasks: [],
-      remember: false,
-    };
-    dispatch(setRememberedUser(cleanUser));
-  }
 
   useEffect(() => {
     // Validação de entradas login
@@ -70,6 +49,15 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
         setErrorRepassword(!repasswordValid);
       }
       setDisable(!(emailValid && passwordValid && repasswordValid));
+    } else if (mode === 'signin') {
+      if (email.length > 0) {
+        const emailValid = email.endsWith('.com') || (email.endsWith('.com.br') && email.includes('@'));
+        setErrorEmail(!emailValid);
+        const passwordValid = password.length >= 6;
+        if (password.length > 0) {
+          setErrorPassword(!passwordValid);
+        }
+      }
     }
   }, [email, password, repassword, mode]);
 
@@ -82,17 +70,6 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
         remember,
       };
 
-      if (existUser) {
-        setShowAlert({
-          display: 'show',
-          success: false,
-          text: 'Esse e-mail já está cadastrado!',
-        });
-        setTimeout(() => {
-          setShowAlert({ display: 'none', success: true, text: '' });
-        }, 1000);
-        return;
-      }
       dispatch(addUser(newUser));
 
       setShowAlert({ display: 'show', success: true, text: 'Usuario criado com sucesso' });
@@ -107,21 +84,8 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
         navigate('/signin');
       }, 2000);
     } else {
-      // até aqui tá ok
-
-      const userFound = listUsersRedux.find((user) => user.email === email);
-      if (!userFound) {
-        setShowAlert({
-          display: 'show',
-          success: false,
-          text: 'E-mail ou senha inválidos!',
-        });
-        setTimeout(() => {
-          setShowAlert({ display: 'none', success: true, text: '' });
-        }, 1000);
-        return;
-      }
-      dispatch(setRememberedUser({ email: userFound.email, password: userFound.password, remember }));
+      // colocar o usuario logado
+      dispatch(setRememberedUser({ email, password, remember }));
       navigate('/notes');
     }
   }
