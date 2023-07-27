@@ -3,9 +3,9 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { addUser, SelectAllUsers, SelectUserByEmail } from '../store/modules/usersSlice';
-import UserType from '../types/userType';
+import { useAppDispatch } from '../store/hooks';
+import { addUser } from '../store/modules/usersSlice';
+import UserType from '../types/UserType';
 import { setRememberedUser } from '../store/modules/loggedUserSlice';
 import AlertComponent from './Alert';
 

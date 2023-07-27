@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import UserType from '../../types/userType';
+import UserType from '../../types/UserType';
 
 interface UserState {
-    user: UserType;
+  user: UserType;
 }
 const initialState: UserState = {
   user: {
-    email: '', password: '', remember: false,
+    email: '',
+    password: '',
+    remember: false,
   },
 };
 export const loggedUserSlice = createSlice({

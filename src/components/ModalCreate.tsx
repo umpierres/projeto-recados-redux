@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { addTask } from '../store/modules/tasksSlice';
-import Task from '../types/taskType';
+import Task from '../types/TaskType';
 
 interface ModalCreateProps {
   title: string;
