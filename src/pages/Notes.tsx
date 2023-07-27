@@ -14,7 +14,7 @@ import ModalCreate from '../components/ModalCreate';
 import ModalEdit from '../components/ModalEdit';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { SelectAllTasks, editTask } from '../store/modules/tasksSlice';
-import TaskType from '../types/taskType';
+import TaskType from '../types/TaskType';
 import AlertComponent from '../components/Alert';
 
 const Notes: React.FC = () => {
