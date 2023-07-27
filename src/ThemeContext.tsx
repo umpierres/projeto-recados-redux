@@ -1,6 +1,6 @@
 import React, { createContext, useState, useMemo } from 'react';
 import { ThemeProvider } from '@emotion/react';
-import { darkTheme, lightTheme } from './config/styles/themes/Theme';
+import { darkTheme, lightTheme } from './config/styles/themes/theme';
 
 interface IThemeContext {
   isDarkMode: boolean;
