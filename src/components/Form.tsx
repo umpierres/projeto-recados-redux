@@ -4,9 +4,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
-import { addUser } from '../store/modules/usersSlice';
+import { addUser } from '../store/modules/userSlice';
 import UserType from '../types/UserType';
-import { setRememberedUser } from '../store/modules/loggedUserSlice';
 import AlertComponent from './Alert';
 
 interface FormProps {
@@ -24,7 +23,6 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorRepassword, setErrorRepassword] = useState(false);
-  const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -63,34 +61,26 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
     event.preventDefault();
     if (mode === 'signup') {
       const newUser: UserType = {
+        id: 's',
         email,
         password,
         remember,
       };
 
-      dispatch(addUser(newUser));
+      /* dispatch(addUser(newUser)); */
 
-      setShowAlert({ display: 'show', success: true, text: 'Usuario criado com sucesso' });
       setEmail('');
       setPassword('');
       setRepassword('');
-
-      setTimeout(() => {
-        setShowAlert({ display: 'none', success: true, text: '' });
-      }, 1000);
-      setTimeout(() => {
-        navigate('/signin');
-      }, 2000);
     } else {
       // colocar o usuario logado
-      dispatch(setRememberedUser({ email, password, remember }));
       navigate('/notes');
     }
   }
 
   return (
     <Box>
-      <AlertComponent success={showAlert.success} text={showAlert.text} display={showAlert.display} />
+      <AlertComponent />
       <Box
         sx={{
           display: 'flex',

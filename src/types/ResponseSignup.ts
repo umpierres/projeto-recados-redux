@@ -1,9 +1,9 @@
 import UserType from './UserType';
 
-type ReturnCreate = {
+type ResponseSignup = {
   success: boolean;
   message: string;
   data?: UserType & { id: string };
 };
 
-export default ReturnCreate;
+export default ResponseSignup;
