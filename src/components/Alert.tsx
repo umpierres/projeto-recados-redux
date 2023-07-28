@@ -1,24 +1,15 @@
 import React from 'react';
 import { Alert } from '@mui/material';
+import { useAppSelector } from '../store/hooks';
 
-interface AlertComponentProps {
-  text: string;
-  success: boolean;
-  display: string;
-}
+const AlertComponent: React.FC = () => {
+  const alert = useAppSelector((state) => state.alert);
 
-const AlertComponent: React.FC<AlertComponentProps> = ({ text, success, display }) => (
-  <Alert
-    sx={{
-      display,
-      position: 'absolute',
-      top: '10%',
-      right: '1%',
-    }}
-    severity={success ? 'success' : 'error'}
-  >
-    {text}
-  </Alert>
-);
+  return (
+    <Alert sx={{ display: alert.display }} severity={alert.type}>
+      {alert.message}
+    </Alert>
+  );
+};
 
 export default AlertComponent;
