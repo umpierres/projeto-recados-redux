@@ -4,9 +4,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
-import { addUser } from '../store/modules/userSlice';
 import UserType from '../types/UserType';
 import AlertComponent from './Alert';
+import { registerUser } from '../store/modules/userSlice';
 
 interface FormProps {
   mode: 'signin' | 'signup';
@@ -67,7 +67,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
         remember,
       };
 
-      /* dispatch(addUser(newUser)); */
+      dispatch(registerUser(newUser));
 
       setEmail('');
       setPassword('');
