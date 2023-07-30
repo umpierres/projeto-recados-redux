@@ -1,12 +1,12 @@
 import {
-  Box, Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography,
+  Box, Button, Checkbox, CircularProgress, FormControlLabel, Grid, Paper, TextField, Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import UserType from '../types/UserType';
 import AlertComponent from './Alert';
-import { registerUser } from '../store/modules/userSlice';
+import { loginUser, registerUser } from '../store/modules/userSlice';
 
 interface FormProps {
   mode: 'signin' | 'signup';
@@ -23,9 +23,16 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorRepassword, setErrorRepassword] = useState(false);
+  const userState = useAppSelector((state) => state.users);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userState.user.logged) {
+      navigate('/notes');
+    }
+  }, [userState, navigate]);
 
   useEffect(() => {
     // Validação de entradas login
@@ -63,7 +70,6 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
       const newUser: UserType = {
         email,
         password,
-        remember,
       };
 
       dispatch(registerUser(newUser));
@@ -72,8 +78,11 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
       setPassword('');
       setRepassword('');
     } else {
-      // colocar o usuario logado
-      navigate('/notes');
+      const userLogged = {
+        email,
+        password,
+      };
+      dispatch(loginUser(userLogged));
     }
   }
 
@@ -141,7 +150,15 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
                   label="Permanecer conectado"
                 />
               )}
-              <Button disabled={disabled} type="submit" variant="contained" fullWidth sx={{ mt: 3, mb: 2 }}>
+              <Button
+                disabled={disabled}
+                // eslint-disable-next-line react/jsx-no-useless-fragment
+                startIcon={userState.loading ? <CircularProgress color="primary" size="2rem" /> : <></>}
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{ mt: 3, mb: 2 }}
+              >
                 {textButton}
               </Button>
               <Grid container>
