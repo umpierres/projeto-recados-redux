@@ -7,14 +7,14 @@ import { visitorRoutes } from '../routes/routes';
 import { useAppSelector } from '../store/hooks';
 
 const Home: React.FC = () => {
+  const userState = useAppSelector((state) => state.users);
   const navigate = useNavigate();
 
-  const rememberedUser = useAppSelector((state) => state.loggedUser.user);
   useEffect(() => {
-    if (rememberedUser.remember) {
+    if (userState.user.logged) {
       navigate('/notes');
     }
-  }, [navigate]);
+  }, [userState, navigate]);
 
   const getRouteUrl = (name: string) => {
     const route = visitorRoutes.find((r) => r.label === name);

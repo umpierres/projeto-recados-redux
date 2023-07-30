@@ -16,8 +16,10 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { SelectAllTasks, editTask } from '../store/modules/tasksSlice';
 import TaskType from '../types/TaskType';
 import AlertComponent from '../components/Alert';
+import { logoutUser, setUser } from '../store/modules/userSlice';
 
 const Notes: React.FC = () => {
+  const userState = useAppSelector((state) => state.users);
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
@@ -34,19 +36,30 @@ const Notes: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
+  /*  const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
   const userLoggedTasks = useAppSelector(SelectAllTasks).filter((task) => task.owner === rememberedLoggedUser.email);
-  const currentTasks = userLoggedTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentTasks = userLoggedTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage); */
 
-  const totalPages = Math.ceil(userLoggedTasks.length / itemsPerPage);
+  const totalPages = 10; /* Math.ceil(userLoggedTasks.length / itemsPerPage); */
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (rememberedLoggedUser.email === '') {
+    const userLogged = localStorage.getItem('userLogged');
+
+    if (!userLogged) {
+      dispatch(logoutUser());
+      return;
+    }
+
+    dispatch(setUser(JSON.parse(userLogged)));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!userState.user.logged) {
       navigate('/');
     }
-  }, [navigate]);
+  }, [userState, navigate]);
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
@@ -72,8 +85,8 @@ const Notes: React.FC = () => {
     setOpenModalEdit(true);
   };
 
-  const handleToggleFavorite = (id: number) => {
-    const task = userLoggedTasks.find((taskExist) => taskExist.id === id);
+  /*   const handleToggleFavorite = (id: number) => {
+    const task = {};  userLoggedTasks.find((taskExist) => taskExist.id === id);
     if (task) {
       dispatch(
         editTask({
@@ -82,17 +95,11 @@ const Notes: React.FC = () => {
         }),
       );
     }
-  };
-
-  useEffect(() => {
-    if (rememberedLoggedUser.email === '') {
-      navigate('/');
-    }
-  }, [navigate]);
+  }; */
 
   return (
     <>
-      <AlertComponent success={showAlert.success} text={showAlert.text} display={showAlert.display} />
+      <AlertComponent />
       <ModalCreate
         open={openModal}
         actionCancel={handleClose}
@@ -109,7 +116,7 @@ const Notes: React.FC = () => {
           </Container>
         </Grid>
 
-        {currentTasks.map((task) => (
+        {/* {currentTasks.map((task) => (
           <Grid item xs={12} md={6} lg={3} key={task?.id}>
             <Container sx={{ marginTop: '20px' }}>
               <Card sx={{ minWidth: 275 }}>
@@ -149,7 +156,7 @@ const Notes: React.FC = () => {
               </Card>
             </Container>
           </Grid>
-        ))}
+        ))} */}
 
         <Grid item xs={12} position="fixed" right="50%" bottom="20px">
           <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} />

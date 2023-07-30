@@ -30,7 +30,12 @@ const Notes: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
+  const rememberedLoggedUser = {
+    id: '',
+    email: '',
+    password: '',
+    remember: false,
+  }; /* useAppSelector((state) => state.loggedUser.user) */
 
   const dispatch = useAppDispatch();
   const userLoggedTasks = useAppSelector(SelectAllTasks).filter((task) => task.owner === rememberedLoggedUser.email);
@@ -81,7 +86,7 @@ const Notes: React.FC = () => {
 
   return (
     <>
-      <AlertComponent success={showAlert.success} text={showAlert.text} display={showAlert.display} />
+      <AlertComponent />
       <Grid container>
         <Grid item xs={12} m={5}>
           <Container>
