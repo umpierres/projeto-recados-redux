@@ -16,11 +16,9 @@ const initialState = {
   loading: false,
 };
 
-export const registerUser = createAsyncThunk('user/signup', async (newUser: UserType, { dispatch }) => {
+export const registerUser = createAsyncThunk('users/signup', async (newUser: UserType, { dispatch }) => {
   try {
-    const response = await todosApi.post('/users/signup', {
-      body: newUser,
-    });
+    const response = await todosApi.post('/users/signup', newUser);
 
     const dataAPI = response.data as ResponseSignup;
 
@@ -39,14 +37,21 @@ export const registerUser = createAsyncThunk('user/signup', async (newUser: User
   } catch (error) {
     if (error instanceof AxiosError) {
       const dataAPI = error.response?.data as ResponseSignup;
+
+      dispatch(
+        showAlert({
+          message: dataAPI.message,
+          type: 'error',
+          display: 'show',
+        }),
+      );
+      setTimeout(() => {
+        dispatch(hideAlert({ display: 'none', type: 'warning', message: '' }));
+      }, 1000);
       return dataAPI;
     }
-
     console.log(error);
-    return {
-      success: 'error',
-      message: 'Algo está de errado no codigo dessa aplicação! Chame o responsavel por ela.',
-    };
+    return { success: false, message: 'Algo está errado com essa aplicação! Chame o responsavel por ela' };
   }
 });
 
@@ -55,22 +60,34 @@ export const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(registerUser.pending, (state, action) => ({
+    builder.addCase(registerUser.pending, (state) => ({
       ...state,
       loading: true,
     }));
     builder.addCase(registerUser.fulfilled, (state, action) => {
-      if (action.payload.success) {
-        if (action.payload.data) {
-          return {
-            user: {
-              id: action.payload.data.id,
-            },
-          };
-        }
+      if (action.payload.success && action.payload.data) {
+        return {
+          user: {
+            id: action.payload.data.id,
+            email: action.payload.data.email,
+            password: action.payload.data.password,
+            remember: action.payload.data.remember,
+          },
+          loading: false,
+        };
       }
+      if (!action.payload?.success) {
+        return {
+          ...state,
+          loading: false,
+        };
+      }
+      return state;
     });
-    builder.addCase(registerUser.rejected, (state, action) => {});
+    builder.addCase(registerUser.rejected, (state) => ({
+      ...state,
+      loading: false,
+    }));
   },
 });
 
