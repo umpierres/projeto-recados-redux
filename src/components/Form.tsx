@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import {
   Box, Button, Checkbox, CircularProgress, FormControlLabel, Grid, Paper, TextField, Typography,
 } from '@mui/material';
@@ -145,14 +146,10 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
                   type="password"
                 />
               ) : (
-                <FormControlLabel
-                  control={<Checkbox checked={remember} onChange={(evento) => setRemember(evento.target.checked)} />}
-                  label="Permanecer conectado"
-                />
+                <></>
               )}
               <Button
                 disabled={disabled}
-                // eslint-disable-next-line react/jsx-no-useless-fragment
                 startIcon={userState.loading ? <CircularProgress color="primary" size="2rem" /> : <></>}
                 type="submit"
                 variant="contained"
