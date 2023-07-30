@@ -61,7 +61,6 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
     event.preventDefault();
     if (mode === 'signup') {
       const newUser: UserType = {
-        id: 's',
         email,
         password,
         remember,
