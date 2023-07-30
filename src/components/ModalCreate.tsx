@@ -21,6 +21,7 @@ interface ModalCreateProps {
 const ModalCreate: React.FC<ModalCreateProps> = ({
   open, actionConfirm, actionCancel, title, description,
 }) => {
+  const userState = useAppSelector((state) => state.users);
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [taskDescription, setTaskDescription] = useState<string>('');
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -47,7 +48,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
     }
   }, [taskTitle]);
 
-  const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
+  const rememberedLoggedUser = userState.user;
 
   const dispatch = useAppDispatch();
 

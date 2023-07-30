@@ -20,6 +20,7 @@ interface ModalEditProps {
 const ModalEdit: React.FC<ModalEditProps> = ({
   task, open, actionConfirm, actionCancel,
 }) => {
+  const userState = useAppSelector((state) => state.users);
   const [taskTitle, setTaskTitle] = useState<string>(task.title);
   const [taskDescription, setTaskDescription] = useState<string>(task.detail);
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -51,7 +52,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     }
   }, [taskTitle]);
 
-  const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
+  const rememberedLoggedUser = userState.user;
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
