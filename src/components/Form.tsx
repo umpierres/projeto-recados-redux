@@ -36,7 +36,7 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
   }, [userState, navigate]);
 
   useEffect(() => {
-    // Validação de entradas login
+    // Validação de entradas cadastro
     if (mode === 'signup') {
       const emailValid = email.endsWith('.com') || (email.endsWith('.com.br') && email.includes('@'));
 
