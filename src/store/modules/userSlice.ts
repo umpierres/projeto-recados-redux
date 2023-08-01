@@ -3,8 +3,8 @@ import { AxiosError } from 'axios';
 import UserType from '../../types/UserType';
 import todosApi from '../../config/services/todosApi';
 import { hideAlert, showAlert } from './alertSlice';
-import ResponseSignUp from '../../types/ResponseSignUp';
 import ResponseSignIn from '../../types/ResponseSignIn';
+import ResponseSignUp from '../../types/ResponseSignUp';
 
 const initialState = {
   user: {
