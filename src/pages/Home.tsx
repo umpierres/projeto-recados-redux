@@ -7,7 +7,7 @@ import { visitorRoutes } from '../routes/routes';
 import { useAppSelector } from '../store/hooks';
 
 const Home: React.FC = () => {
-  const userState = useAppSelector((state) => state.users);
+  const userState = useAppSelector((state) => state.user);
   const navigate = useNavigate();
 
   useEffect(() => {

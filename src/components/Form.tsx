@@ -19,12 +19,11 @@ export const Form: React.FC<FormProps> = ({ mode, textButton, textTitle }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repassword, setRepassword] = useState('');
-  const [remember, setRemember] = useState(false);
   const [disabled, setDisable] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorRepassword, setErrorRepassword] = useState(false);
-  const userState = useAppSelector((state) => state.users);
+  const userState = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

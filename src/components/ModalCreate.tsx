@@ -7,8 +7,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { addTask } from '../store/modules/tasksSlice';
 import Task from '../types/TaskType';
+import { createTask } from '../store/modules/taskSlice';
 
 interface ModalCreateProps {
   title: string;
@@ -21,7 +21,7 @@ interface ModalCreateProps {
 const ModalCreate: React.FC<ModalCreateProps> = ({
   open, actionConfirm, actionCancel, title, description,
 }) => {
-  const userState = useAppSelector((state) => state.users);
+  const userState = useAppSelector((state) => state.user);
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [taskDescription, setTaskDescription] = useState<string>('');
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -58,16 +58,16 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
     setTaskDescription('');
   };
   const handleConfirm = () => {
-    const data = new Date().toLocaleString();
     const newTask: Task = {
-      id: Date.now(),
+      id: '',
       title: taskTitle,
-      detail: taskDescription,
+      description: taskDescription,
       favorite: false,
-      date: `${data}`,
-      owner: `${rememberedLoggedUser.email}`,
+      archived: false,
+      date: new Date().toLocaleString(),
+      owner: `${rememberedLoggedUser.id}`,
     };
-    dispatch(addTask(newTask));
+    dispatch(createTask(newTask));
     actionConfirm();
     setTaskTitle('');
     setTaskDescription('');

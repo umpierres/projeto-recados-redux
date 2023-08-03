@@ -57,7 +57,7 @@ export const registerUser = createAsyncThunk('users/signup', async (newUser: Use
   }
 });
 
-export const loginUser = createAsyncThunk('user/signin', async (userData: UserType, { dispatch }) => {
+export const loginUser = createAsyncThunk('users/signin', async (userData: UserType, { dispatch }) => {
   try {
     const response = await todosApi.post('/users/signin', userData);
 
@@ -169,7 +169,6 @@ export const userSlice = createSlice({
 
       return initialState;
     });
-
     builder.addCase(loginUser.rejected, () => initialState);
   },
 });

@@ -7,8 +7,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { editTask } from '../store/modules/tasksSlice';
 import Task from '../types/TaskType';
+import { updateTask } from '../store/modules/taskSlice';
 
 interface ModalEditProps {
   task: Task;
@@ -20,9 +20,9 @@ interface ModalEditProps {
 const ModalEdit: React.FC<ModalEditProps> = ({
   task, open, actionConfirm, actionCancel,
 }) => {
-  const userState = useAppSelector((state) => state.users);
+  const userState = useAppSelector((state) => state.user);
   const [taskTitle, setTaskTitle] = useState<string>(task.title);
-  const [taskDescription, setTaskDescription] = useState<string>(task.detail);
+  const [taskDescription, setTaskDescription] = useState<string>(task.description);
   const [titleError, setTitleError] = useState<boolean>(false);
   const [titleHelperText, setTitleHelperText] = useState<string>('');
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
@@ -30,7 +30,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 
   useEffect(() => {
     setTaskTitle(task.title);
-    setTaskDescription(task.detail);
+    setTaskDescription(task.description);
   }, [task]);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 
   const handleClose = () => {
     setTaskTitle(task.title);
-    setTaskDescription(task.detail);
+    setTaskDescription(task.description);
     actionCancel();
   };
   const handleConfirm = () => {
@@ -65,11 +65,10 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     const updatedTask: Task = {
       ...task,
       title: taskTitle!,
-      detail: taskDescription!,
-      date: `${data}`,
-      owner: `${rememberedLoggedUser.email}`,
+      description: taskDescription!,
+      owner: `${rememberedLoggedUser.id}`,
     };
-    dispatch(editTask(updatedTask));
+    dispatch(updateTask(updatedTask));
     actionConfirm();
   };
 

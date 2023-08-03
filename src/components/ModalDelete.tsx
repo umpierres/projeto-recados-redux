@@ -3,13 +3,13 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
-import { removeTask } from '../store/modules/tasksSlice';
 import { useAppDispatch } from '../store/hooks';
+import { deleteTask } from '../store/modules/taskSlice';
 
 interface ModalDeleteProps {
   openModal: boolean;
   actionCancel: () => void;
-  TaskId: number;
+  TaskId: string;
 }
 
 const ModalDelete: React.FC<ModalDeleteProps> = ({ openModal, actionCancel, TaskId }) => {
@@ -19,7 +19,7 @@ const ModalDelete: React.FC<ModalDeleteProps> = ({ openModal, actionCancel, Task
     actionCancel();
   };
   const handleDelete = () => {
-    dispatch(removeTask(TaskId));
+    dispatch(deleteTask(TaskId));
     actionCancel();
   };
 

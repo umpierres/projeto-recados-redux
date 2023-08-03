@@ -13,36 +13,55 @@ import ModalDelete from '../components/ModalDelete';
 import ModalCreate from '../components/ModalCreate';
 import ModalEdit from '../components/ModalEdit';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { SelectAllTasks, editTask } from '../store/modules/tasksSlice';
 import TaskType from '../types/TaskType';
 import AlertComponent from '../components/Alert';
 import { logoutUser, setUser } from '../store/modules/userSlice';
+import { listTasks } from '../store/modules/taskSlice';
+import { ResponseGetTasks } from '../types/ResponseGetTasks';
 
 const Notes: React.FC = () => {
-  const userState = useAppSelector((state) => state.users);
+  const userState = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const taskState = useAppSelector((state) => state.task);
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
   const [taskValue, setTaskValue] = useState<TaskType>({
-    id: 0,
+    id: '',
     title: '',
-    detail: '',
+    description: '',
     favorite: false,
+    archived: false,
     date: '',
     owner: '',
   });
   const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const [userLoggedTasks, setUserLoggedTasks] = useState<TaskType[]>([]);
 
-  /*  const rememberedLoggedUser = useAppSelector((state) => state.loggedUser.user);
-  const userLoggedTasks = useAppSelector(SelectAllTasks).filter((task) => task.owner === rememberedLoggedUser.email);
-  const currentTasks = userLoggedTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage); */
+  useEffect(() => {
+    const findUserTasks = async () => {
+      try {
+        const action = await dispatch(listTasks(userState.user.id));
+        const response: ResponseGetTasks | undefined = action.payload as ResponseGetTasks | undefined;
+        if (response && response.data) {
+          setUserLoggedTasks(response.data);
+        } else {
+          setUserLoggedTasks([]);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar tarefas:', error);
+      }
+    };
 
-  const totalPages = 10; /* Math.ceil(userLoggedTasks.length / itemsPerPage); */
+    findUserTasks();
+  }, [dispatch, userState.user.id]);
 
-  const dispatch = useAppDispatch();
+  const currentTasks = userLoggedTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const totalPages = Math.ceil(userLoggedTasks.length / itemsPerPage);
 
   useEffect(() => {
     const userLogged = localStorage.getItem('userLogged');
@@ -116,7 +135,7 @@ const Notes: React.FC = () => {
           </Container>
         </Grid>
 
-        {/* {currentTasks.map((task) => (
+        {currentTasks.map((task) => (
           <Grid item xs={12} md={6} lg={3} key={task?.id}>
             <Container sx={{ marginTop: '20px' }}>
               <Card sx={{ minWidth: 275 }}>
@@ -128,13 +147,13 @@ const Notes: React.FC = () => {
                     {task.date}
                   </Typography>
                   <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>
-                    {task.detail}
+                    {task.description}
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <IconButton color={task.favorite ? 'error' : 'inherit'} onClick={() => handleToggleFavorite(task.id)}>
+                  {/*  <IconButton color={task.favorite ? 'error' : 'inherit'} onClick={() => handleToggleFavorite(task.id)}>
                     {task.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                  </IconButton>
+                  </IconButton> */}
                   <IconButton
                     size="small"
                     onClick={() => {
@@ -156,7 +175,7 @@ const Notes: React.FC = () => {
               </Card>
             </Container>
           </Grid>
-        ))} */}
+        ))}
 
         <Grid item xs={12} position="fixed" right="50%" bottom="20px">
           <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} />

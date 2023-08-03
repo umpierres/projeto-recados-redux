@@ -1,11 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import usersSlice from './userSlice';
-import tasksSlice from './tasksSlice';
+import userSlice from './userSlice';
+import taskSlice from './taskSlice';
 import alertSlice from './alertSlice';
 
 export default combineReducers({
-  users: usersSlice,
-  tasks: tasksSlice,
+  user: userSlice,
+  task: taskSlice,
   alert: alertSlice,
 });

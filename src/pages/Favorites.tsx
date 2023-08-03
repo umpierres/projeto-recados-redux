@@ -1,4 +1,4 @@
-import {
+/* import {
   Container, Divider, Pagination, Grid, Card, CardActions, CardContent, Typography, IconButton,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import ModalDelete from '../components/ModalDelete';
 import ModalEdit from '../components/ModalEdit';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { SelectAllTasks, editTask } from '../store/modules/tasksSlice';
+import { SelectAllTasks, editTask } from '../store/modules/taskSlice';
 import TaskType from '../types/TaskType';
 import AlertComponent from '../components/Alert';
 
@@ -35,7 +35,8 @@ const Notes: React.FC = () => {
     email: '',
     password: '',
     remember: false,
-  }; /* useAppSelector((state) => state.loggedUser.user) */
+  };
+  useAppSelector((state) => state.loggedUser.user);
 
   const dispatch = useAppDispatch();
   const userLoggedTasks = useAppSelector(SelectAllTasks).filter((task) => task.owner === rememberedLoggedUser.email);
@@ -148,3 +149,4 @@ const Notes: React.FC = () => {
 };
 
 export default Notes;
+ */
