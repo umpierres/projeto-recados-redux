@@ -1,10 +1,11 @@
 type TaskType = {
-    id: number;
-    title: string;
-    detail: string;
-    favorite: boolean;
-    date: any;
-    owner:string;
+  id: string;
+  title: string;
+  description: string;
+  favorite: boolean;
+  archived: boolean;
+  date: any;
+  owner: string;
 };
 
 export default TaskType;
