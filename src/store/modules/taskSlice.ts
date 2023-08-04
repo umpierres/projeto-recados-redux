@@ -100,9 +100,9 @@ export const updateTask = createAsyncThunk('/notes/edit/', async (updatedTask: U
   }
 });
 
-export const listTasks = createAsyncThunk('/notes/list/', async (ownerIDTask: string, { dispatch }) => {
+export const listTasks = createAsyncThunk('/notes/', async (ownerIDTask: string, { dispatch }) => {
   try {
-    const response = await todosApi.get(`/notes/list/${ownerIDTask}`);
+    const response = await todosApi.get(`/notes/${ownerIDTask}`);
     const dataAPI = response.data as ResponseGetTasks;
     return dataAPI.data;
   } catch (error) {
