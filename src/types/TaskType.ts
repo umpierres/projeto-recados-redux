@@ -5,7 +5,7 @@ type TaskType = {
   favorite: boolean;
   archived: boolean;
   date: any;
-  owner: string;
+  ownerID: string;
 };
 
 export default TaskType;

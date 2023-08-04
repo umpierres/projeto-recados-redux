@@ -66,7 +66,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       ...task,
       title: taskTitle!,
       description: taskDescription!,
-      owner: `${rememberedLoggedUser.id}`,
+      ownerID: `${rememberedLoggedUser.id}`,
     };
     dispatch(updateTask(updatedTask));
     actionConfirm();

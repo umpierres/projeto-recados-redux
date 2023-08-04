@@ -58,15 +58,15 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
     setTaskDescription('');
   };
   const handleConfirm = () => {
-    const newTask: Task = {
-      id: '',
+    const newTask: Omit<Task, 'id'> = {
       title: taskTitle,
       description: taskDescription,
       favorite: false,
       archived: false,
       date: new Date().toLocaleString(),
-      owner: `${rememberedLoggedUser.id}`,
+      ownerID: rememberedLoggedUser.id,
     };
+    console.log(newTask);
     dispatch(createTask(newTask));
     actionConfirm();
     setTaskTitle('');

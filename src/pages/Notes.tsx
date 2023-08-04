@@ -34,7 +34,7 @@ const Notes: React.FC = () => {
     favorite: false,
     archived: false,
     date: '',
-    owner: '',
+    ownerID: '',
   });
   const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
   const [currentPage, setCurrentPage] = useState(1);

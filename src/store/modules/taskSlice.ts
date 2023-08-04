@@ -12,16 +12,16 @@ import { ResponseGetTasks } from '../../types/ResponseGetTasks';
 const initialState = {
   task: {
     id: '',
-    ownerId: '',
+    ownerID: '',
   },
   loading: false,
 };
 
 // create note
 
-export const createTask = createAsyncThunk('notes/create/', async (newTask: TaskType, { dispatch }) => {
+export const createTask = createAsyncThunk('notes/create/', async (newTask: Omit<TaskType, 'id'>, { dispatch }) => {
   try {
-    const response = await todosApi.post('/notes/create/', JSON.stringify(newTask));
+    const response = await todosApi.post('/notes/create/', newTask);
     const dataAPI = response.data as ResponseCreateTask;
     dispatch(
       showAlert({
@@ -185,7 +185,24 @@ export const TaskSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createTask.fulfilled, (state, action) => {
-      state.loading = false;
+      if (action.payload.success && action.payload.data) {
+        const { id, ownerID } = action.payload.data; // Certifique-se de que sua API está retornando o 'id' e 'ownerId' corretamente
+        return {
+          ...state,
+          task: {
+            id,
+            ownerID,
+          },
+          loading: false,
+        };
+      }
+      if (!action.payload?.success) {
+        return {
+          ...state,
+          loading: false,
+        };
+      }
+      return state;
     });
     builder.addCase(createTask.rejected, (state) => {
       state.loading = false;

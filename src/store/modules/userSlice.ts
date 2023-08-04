@@ -106,8 +106,9 @@ export const userSlice = createSlice({
     setUser: (state, action) => ({
       ...state,
       user: {
-        id: action.payload,
-        email: action.payload,
+        ...state.user,
+        id: action.payload.id,
+        email: action.payload.email,
         logged: true,
       },
     }),

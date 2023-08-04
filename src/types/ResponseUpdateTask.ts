@@ -3,7 +3,7 @@ import TaskType from './TaskType';
 type UpdateNoteDTO = {
   title: string;
   description: string;
-  owner: string;
+  ownerID: string;
 };
 
 type ResponseUpdateTask = {
