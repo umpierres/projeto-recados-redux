@@ -21,7 +21,7 @@ const initialState = {
 
 export const createTask = createAsyncThunk('notes/create/', async (newTask: Omit<TaskType, 'id'>, { dispatch }) => {
   try {
-    const response = await todosApi.post('/notes/create/', newTask);
+    const response = await todosApi.post(`/notes/${newTask.ownerID}`, newTask);
     const dataAPI = response.data as ResponseCreateTask;
     dispatch(
       showAlert({
