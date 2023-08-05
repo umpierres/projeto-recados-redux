@@ -62,7 +62,7 @@ export const createTask = createAsyncThunk('notes/create/', async (newTask: Omit
 
 export const updateTask = createAsyncThunk('/notes/edit/', async (updatedTask: UpdateNoteDTO, { dispatch }) => {
   try {
-    const response = await todosApi.put('/notes/edit/', updatedTask);
+    const response = await todosApi.put(`/notes/${updatedTask.ownerID}/${updatedTask.id}`, updatedTask);
     const dataAPI = response.data as ResponseUpdateTask;
     dispatch(
       showAlert({
@@ -186,7 +186,7 @@ export const TaskSlice = createSlice({
     });
     builder.addCase(createTask.fulfilled, (state, action) => {
       if (action.payload.success && action.payload.data) {
-        const { id, ownerID } = action.payload.data; // Certifique-se de que sua API está retornando o 'id' e 'ownerId' corretamente
+        const { id, ownerID } = action.payload.data;
         return {
           ...state,
           task: {
