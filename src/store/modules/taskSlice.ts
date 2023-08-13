@@ -3,9 +3,9 @@ import { AxiosError } from 'axios';
 import todosApi from '../../config/services/todosApi';
 import TaskType from '../../types/TaskType';
 import { hideAlert, showAlert } from './alertSlice';
-import ResponseCreateTask from '../../types/ResponseCreateTask';
 import { ResponseTask } from '../../types/ResponseTask';
 import { OwnerAndFilter } from '../../types/SliceTypes';
+import { ResponseCreateTask } from '../../types/ResponseCreateTask';
 
 const initialState = {
   task: {
