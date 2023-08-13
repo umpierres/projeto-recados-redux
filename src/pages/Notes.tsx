@@ -73,7 +73,7 @@ const Notes: React.FC = () => {
         }),
       );
     }
-  }, [dispatch, userState, taskState.task.notes]);
+  }, [dispatch, userState.user.logged, taskState.task.notes]);
 
   const handleClose = () => {
     setOpenModal(false);
