@@ -9,20 +9,19 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
-import ModalDelete from '../components/ModalDelete';
 import ModalCreate from '../components/ModalCreate';
+import ModalDelete from '../components/ModalDelete';
 import ModalEdit from '../components/ModalEdit';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import TaskType from '../types/TaskType';
 import AlertComponent from '../components/Alert';
 import { logoutUser, setUser } from '../store/modules/userSlice';
-import { listTasks } from '../store/modules/taskSlice';
-import { ResponseGetTasks } from '../types/ResponseGetTasks';
+import { listTasks, toggleStatusTask } from '../store/modules/taskSlice';
 
 const Notes: React.FC = () => {
   const userState = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch();
   const taskState = useAppSelector((state) => state.task);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
@@ -36,31 +35,11 @@ const Notes: React.FC = () => {
     date: '',
     ownerID: '',
   });
-  const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
   const [currentPage, setCurrentPage] = useState(1);
+
   const itemsPerPage = 12;
-  const [userLoggedTasks, setUserLoggedTasks] = useState<TaskType[]>([]);
-
-  useEffect(() => {
-    const findUserTasks = async () => {
-      try {
-        const action = await dispatch(listTasks(userState.user.id));
-        const response: ResponseGetTasks | undefined = action.payload as ResponseGetTasks | undefined;
-        if (response && response.data) {
-          setUserLoggedTasks(response.data);
-        } else {
-          setUserLoggedTasks([]);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar tarefas:', error);
-      }
-    };
-
-    findUserTasks();
-  }, [dispatch, userState.user.id]);
-
+  const userLoggedTasks = taskState.task.notes;
   const currentTasks = userLoggedTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
   const totalPages = Math.ceil(userLoggedTasks.length / itemsPerPage);
 
   useEffect(() => {
@@ -84,6 +63,18 @@ const Notes: React.FC = () => {
     setCurrentPage(value);
   };
 
+  useEffect(() => {
+    if (userState.user.logged) {
+      const ownerID = userState.user.id;
+      dispatch(
+        listTasks({
+          ownerID,
+          filter: {},
+        }),
+      );
+    }
+  }, [dispatch, userState, taskState.task.notes]);
+
   const handleClose = () => {
     setOpenModal(false);
     setOpenModalDelete(false);
@@ -93,28 +84,12 @@ const Notes: React.FC = () => {
   const actionConfirm = () => {
     setOpenModal(false);
     setOpenModalEdit(false);
-    setShowAlert({ success: true, text: 'Recado adicionado com sucesso', display: 'block' });
-    setTimeout(() => {
-      setShowAlert({ display: 'none', success: true, text: '' });
-    }, 1000);
   };
 
   const handleEdit = (task: TaskType) => {
     setTaskValue(task);
     setOpenModalEdit(true);
   };
-
-  /*   const handleToggleFavorite = (id: number) => {
-    const task = {};  userLoggedTasks.find((taskExist) => taskExist.id === id);
-    if (task) {
-      dispatch(
-        editTask({
-          ...task,
-          favorite: !task.favorite,
-        }),
-      );
-    }
-  }; */
 
   return (
     <>
@@ -151,9 +126,14 @@ const Notes: React.FC = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  {/*  <IconButton color={task.favorite ? 'error' : 'inherit'} onClick={() => handleToggleFavorite(task.id)}>
+                  <IconButton
+                    color={task.favorite ? 'error' : 'inherit'}
+                    onClick={() => {
+                      dispatch(toggleStatusTask({ ownerID: userState.user.id, noteID: task.id!, action: 'favorite' }));
+                    }}
+                  >
                     {task.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                  </IconButton> */}
+                  </IconButton>
                   <IconButton
                     size="small"
                     onClick={() => {
@@ -181,8 +161,10 @@ const Notes: React.FC = () => {
           <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} />
         </Grid>
       </Grid>
-      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} TaskId={taskValue.id} />
-      <ModalEdit task={taskValue} open={openModalEdit} actionCancel={handleClose} actionConfirm={actionConfirm} />
+
+      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} ownerID={userState.user.id} noteID={taskValue.id!} />
+      <ModalEdit open={openModalEdit} task={taskValue} actionCancel={handleClose} actionConfirm={actionConfirm} />
+
       <Fab
         color="primary"
         aria-label="add"
