@@ -1,6 +1,4 @@
-export {};
-
-/* import {
+import {
   Container, Divider, Pagination, Grid, Card, CardActions, CardContent, Typography, IconButton,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -12,37 +10,54 @@ import { useNavigate } from 'react-router-dom';
 import ModalDelete from '../components/ModalDelete';
 import ModalEdit from '../components/ModalEdit';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { SelectAllTasks, editTask } from '../store/modules/taskSlice';
 import TaskType from '../types/TaskType';
 import AlertComponent from '../components/Alert';
+import { listTasks } from '../store/modules/taskSlice';
+import { logoutUser, setUser } from '../store/modules/userSlice';
 
-const Notes: React.FC = () => {
+const Favorites: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const userState = useAppSelector((state) => state.user);
+  const taskState = useAppSelector((state) => state.task);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
   const [taskValue, setTaskValue] = useState<TaskType>({
-    id: Date.now(),
+    id: '',
     title: '',
-    detail: '',
+    description: '',
     favorite: false,
+    archived: false,
     date: '',
-    owner: '',
+    ownerID: '',
   });
-  const [showAlert, setShowAlert] = useState({ success: false, text: '', display: 'none' });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const favoriteTasks = taskState.task.notes;
 
-  const rememberedLoggedUser = {
-    id: '',
-    email: '',
-    password: '',
-    remember: false,
-  };
-  useAppSelector((state) => state.loggedUser.user);
+  useEffect(() => {
+    const userLogged = localStorage.getItem('userLogged');
 
-  const dispatch = useAppDispatch();
-  const userLoggedTasks = useAppSelector(SelectAllTasks).filter((task) => task.owner === rememberedLoggedUser.email);
-  const favoriteTasks = useMemo(() => userLoggedTasks?.filter((item) => item.favorite === true), [userLoggedTasks]);
+    if (!userLogged) {
+      dispatch(logoutUser());
+      return;
+    }
+
+    dispatch(setUser(JSON.parse(userLogged)));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userState.user.logged) {
+      const ownerID = userState.user.id;
+      dispatch(
+        listTasks({
+          ownerID,
+          filter: { favorite: true },
+        }),
+      );
+    }
+  }, [dispatch, userState, taskState.task.notes]);
+
   const currentTasks = favoriteTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const totalPages = Math.ceil(favoriteTasks.length / itemsPerPage);
@@ -54,10 +69,6 @@ const Notes: React.FC = () => {
 
   const actionConfirm = () => {
     setOpenModalEdit(false);
-    setShowAlert({ success: true, text: 'Recado adicionado com sucesso', display: 'block' });
-    setTimeout(() => {
-      setShowAlert({ display: 'none', success: true, text: '' });
-    }, 1000);
   };
 
   const handleEdit = (task: TaskType) => {
@@ -65,7 +76,7 @@ const Notes: React.FC = () => {
     setOpenModalEdit(true);
   };
 
-  const handleToggleFavorite = (id: number) => {
+  /*   const handleToggleFavorite = (id: number) => {
     const task = userLoggedTasks.find((taskExist) => taskExist.id === id);
     if (task) {
       dispatch(
@@ -75,17 +86,11 @@ const Notes: React.FC = () => {
         }),
       );
     }
-  };
+  }; */
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
   };
-
-  useEffect(() => {
-    if (rememberedLoggedUser.email === '') {
-      navigate('/');
-    }
-  }, [navigate]);
 
   return (
     <>
@@ -110,13 +115,13 @@ const Notes: React.FC = () => {
                     {task.date}
                   </Typography>
                   <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>
-                    {task.detail}
+                    {task.description}
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <IconButton color={task.favorite ? 'error' : 'inherit'} onClick={() => handleToggleFavorite(task.id)}>
+                  {/*  <IconButton color={task.favorite ? 'error' : 'inherit'} onClick={() => handleToggleFavorite(task.id)}>
                     {task.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                  </IconButton>
+                  </IconButton> */}
 
                   <IconButton
                     size="small"
@@ -144,11 +149,10 @@ const Notes: React.FC = () => {
           <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} />
         </Grid>
       </Grid>
-      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} TaskId={taskValue.id} />
-      <ModalEdit task={taskValue} open={openModalEdit} actionCancel={handleClose} actionConfirm={actionConfirm} />
+      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} ownerID={userState.user.id} noteID={taskValue.id!} />
+      <ModalEdit open={openModalEdit} task={taskValue} actionCancel={handleClose} actionConfirm={actionConfirm} />
     </>
   );
 };
 
-export default Notes;
- */
+export default Favorites;
