@@ -15,10 +15,11 @@ interface ModalEditProps {
   open: boolean;
   actionConfirm: () => void;
   actionCancel: () => void;
+  toggleNoteChanged: () => void;
 }
 
 const ModalEdit: React.FC<ModalEditProps> = ({
-  task, open, actionConfirm, actionCancel,
+  task, open, actionConfirm, actionCancel, toggleNoteChanged,
 }) => {
   const userState = useAppSelector((state) => state.user);
   const [taskTitle, setTaskTitle] = useState<string>(task.title);
@@ -69,6 +70,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     };
     dispatch(updateTask({ ownerID: updatedTask.ownerID, noteID: updatedTask.id!, updatedTask }));
     actionConfirm();
+    toggleNoteChanged();
   };
 
   return (

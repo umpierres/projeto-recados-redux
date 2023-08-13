@@ -1,7 +1,7 @@
 import {
   Container, Divider, Pagination, Grid, Card, CardActions, CardContent, Typography, IconButton,
 } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,7 +12,7 @@ import ModalEdit from '../components/ModalEdit';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import TaskType from '../types/TaskType';
 import AlertComponent from '../components/Alert';
-import { listTasks } from '../store/modules/taskSlice';
+import { listTasks, toggleStatusTask } from '../store/modules/taskSlice';
 import { logoutUser, setUser } from '../store/modules/userSlice';
 
 const Favorites: React.FC = () => {
@@ -20,6 +20,7 @@ const Favorites: React.FC = () => {
   const navigate = useNavigate();
   const userState = useAppSelector((state) => state.user);
   const taskState = useAppSelector((state) => state.task);
+  const [noteChanged, setNoteChanged] = useState<boolean>(false);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
   const [taskValue, setTaskValue] = useState<TaskType>({
@@ -49,14 +50,16 @@ const Favorites: React.FC = () => {
   useEffect(() => {
     if (userState.user.logged) {
       const ownerID = userState.user.id;
-      dispatch(
-        listTasks({
-          ownerID,
-          filter: { favorite: true },
-        }),
-      );
+      setTimeout(() => {
+        dispatch(
+          listTasks({
+            ownerID,
+            filter: {},
+          }),
+        );
+      }, 500);
     }
-  }, [dispatch, userState, taskState.task.notes]);
+  }, [dispatch, userState.user, noteChanged]);
 
   const currentTasks = favoriteTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -75,18 +78,6 @@ const Favorites: React.FC = () => {
     setTaskValue(task);
     setOpenModalEdit(true);
   };
-
-  /*   const handleToggleFavorite = (id: number) => {
-    const task = userLoggedTasks.find((taskExist) => taskExist.id === id);
-    if (task) {
-      dispatch(
-        editTask({
-          ...task,
-          favorite: !task.favorite,
-        }),
-      );
-    }
-  }; */
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
@@ -119,9 +110,14 @@ const Favorites: React.FC = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  {/*  <IconButton color={task.favorite ? 'error' : 'inherit'} onClick={() => handleToggleFavorite(task.id)}>
+                  <IconButton
+                    color={task.favorite ? 'error' : 'inherit'}
+                    onClick={() => {
+                      dispatch(toggleStatusTask({ ownerID: userState.user.id, noteID: task.id!, action: 'favorite' }));
+                    }}
+                  >
                     {task.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                  </IconButton> */}
+                  </IconButton>
 
                   <IconButton
                     size="small"
@@ -149,8 +145,20 @@ const Favorites: React.FC = () => {
           <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} />
         </Grid>
       </Grid>
-      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} ownerID={userState.user.id} noteID={taskValue.id!} />
-      <ModalEdit open={openModalEdit} task={taskValue} actionCancel={handleClose} actionConfirm={actionConfirm} />
+      <ModalDelete
+        toggleNoteChanged={() => setNoteChanged(!noteChanged)}
+        openModal={openModalDelete}
+        actionCancel={handleClose}
+        ownerID={userState.user.id}
+        noteID={taskValue.id!}
+      />
+      <ModalEdit
+        toggleNoteChanged={() => setNoteChanged(!noteChanged)}
+        open={openModalEdit}
+        task={taskValue}
+        actionCancel={handleClose}
+        actionConfirm={actionConfirm}
+      />
     </>
   );
 };

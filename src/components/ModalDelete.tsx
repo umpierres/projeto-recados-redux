@@ -11,10 +11,11 @@ interface ModalDeleteProps {
   actionCancel: () => void;
   ownerID: string;
   noteID: string;
+  toggleNoteChanged: () => void;
 }
 
 const ModalDelete: React.FC<ModalDeleteProps> = ({
-  openModal, actionCancel, ownerID, noteID,
+  openModal, actionCancel, ownerID, noteID, toggleNoteChanged,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -24,6 +25,7 @@ const ModalDelete: React.FC<ModalDeleteProps> = ({
   const handleDelete = () => {
     dispatch(deleteTask({ ownerID, noteID }));
     actionCancel();
+    toggleNoteChanged();
   };
 
   return (

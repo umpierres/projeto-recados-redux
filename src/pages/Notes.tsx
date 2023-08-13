@@ -23,6 +23,7 @@ const Notes: React.FC = () => {
   const taskState = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [noteChanged, setNoteChanged] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
@@ -66,14 +67,16 @@ const Notes: React.FC = () => {
   useEffect(() => {
     if (userState.user.logged) {
       const ownerID = userState.user.id;
-      dispatch(
-        listTasks({
-          ownerID,
-          filter: {},
-        }),
-      );
+      setTimeout(() => {
+        dispatch(
+          listTasks({
+            ownerID,
+            filter: {},
+          }),
+        );
+      }, 500);
     }
-  }, [dispatch, userState.user.logged, taskState.task.notes]);
+  }, [dispatch, userState.user, noteChanged]);
 
   const handleClose = () => {
     setOpenModal(false);
@@ -96,6 +99,7 @@ const Notes: React.FC = () => {
       <AlertComponent />
       <ModalCreate
         open={openModal}
+        toggleNoteChanged={() => setNoteChanged(!noteChanged)}
         actionCancel={handleClose}
         actionConfirm={actionConfirm}
         description="Digite o titulo e descrição do seu recado"
@@ -162,8 +166,20 @@ const Notes: React.FC = () => {
         </Grid>
       </Grid>
 
-      <ModalDelete openModal={openModalDelete} actionCancel={handleClose} ownerID={userState.user.id} noteID={taskValue.id!} />
-      <ModalEdit open={openModalEdit} task={taskValue} actionCancel={handleClose} actionConfirm={actionConfirm} />
+      <ModalDelete
+        toggleNoteChanged={() => setNoteChanged(!noteChanged)}
+        openModal={openModalDelete}
+        actionCancel={handleClose}
+        ownerID={userState.user.id}
+        noteID={taskValue.id!}
+      />
+      <ModalEdit
+        toggleNoteChanged={() => setNoteChanged(!noteChanged)}
+        open={openModalEdit}
+        task={taskValue}
+        actionCancel={handleClose}
+        actionConfirm={actionConfirm}
+      />
 
       <Fab
         color="primary"

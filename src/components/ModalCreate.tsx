@@ -16,10 +16,11 @@ interface ModalCreateProps {
   open: boolean;
   actionConfirm: () => void;
   actionCancel: () => void;
+  toggleNoteChanged: () => void;
 }
 
 const ModalCreate: React.FC<ModalCreateProps> = ({
-  open, actionConfirm, actionCancel, title, description,
+  open, actionConfirm, actionCancel, title, description, toggleNoteChanged,
 }) => {
   const userState = useAppSelector((state) => state.user);
   const [taskTitle, setTaskTitle] = useState<string>('');
@@ -38,6 +39,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
       setDescriptionHelperText('');
     }
   }, [taskDescription]);
+
   useEffect(() => {
     if (taskTitle.length > 30) {
       setTitleError(true);
@@ -68,9 +70,10 @@ const ModalCreate: React.FC<ModalCreateProps> = ({
     };
 
     dispatch(createTask(newTask));
-    actionConfirm();
     setTaskTitle('');
     setTaskDescription('');
+    actionConfirm();
+    toggleNoteChanged();
   };
 
   return (
