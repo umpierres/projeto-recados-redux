@@ -1,5 +1,5 @@
 type TaskType = {
-  id: string;
+  id?: string;
   title: string;
   description: string;
   favorite: boolean;
