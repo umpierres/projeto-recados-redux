@@ -9,17 +9,20 @@ import { deleteTask } from '../store/modules/taskSlice';
 interface ModalDeleteProps {
   openModal: boolean;
   actionCancel: () => void;
-  TaskId: string;
+  ownerID: string;
+  noteID: string;
 }
 
-const ModalDelete: React.FC<ModalDeleteProps> = ({ openModal, actionCancel, TaskId }) => {
+const ModalDelete: React.FC<ModalDeleteProps> = ({
+  openModal, actionCancel, ownerID, noteID,
+}) => {
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
     actionCancel();
   };
   const handleDelete = () => {
-    dispatch(deleteTask(TaskId));
+    dispatch(deleteTask({ ownerID, noteID }));
     actionCancel();
   };
 

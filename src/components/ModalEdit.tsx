@@ -61,14 +61,13 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     actionCancel();
   };
   const handleConfirm = () => {
-    const data = new Date().toLocaleString();
     const updatedTask: Task = {
       ...task,
       title: taskTitle!,
       description: taskDescription!,
       ownerID: `${rememberedLoggedUser.id}`,
     };
-    dispatch(updateTask(updatedTask));
+    dispatch(updateTask({ ownerID: updatedTask.ownerID, noteID: updatedTask.id!, updatedTask }));
     actionConfirm();
   };
 
