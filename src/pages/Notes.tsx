@@ -74,7 +74,7 @@ const Notes: React.FC = () => {
             filter: {},
           }),
         );
-      }, 500);
+      }, 1000);
     }
   }, [dispatch, userState.user, noteChanged]);
 
