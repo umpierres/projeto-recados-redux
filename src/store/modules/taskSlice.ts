@@ -62,9 +62,8 @@ export const createTask = createAsyncThunk('notes/create', async (newTask: TaskT
 
 export const listTasks = createAsyncThunk('notes/list', async ({ ownerID, filter }: OwnerAndFilter, { dispatch }) => {
   try {
-    const response = await todosApi.get('/notes/', {
+    const response = await todosApi.get(`/notes/${ownerID}`, {
       params: { filter },
-      data: { ownerID },
     });
     const dataAPI = response.data as ResponseTask;
     dispatch(
