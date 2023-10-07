@@ -62,7 +62,10 @@ export const createTask = createAsyncThunk('notes/create', async (newTask: TaskT
 
 export const listTasks = createAsyncThunk('notes/list', async ({ ownerID, filter }: OwnerAndFilter, { dispatch }) => {
   try {
-    const response = await todosApi.get('/notes/', { params: { filter }, data: { ownerID } });
+    const response = await todosApi.get('/notes/', {
+      params: { filter },
+      data: { ownerID },
+    });
     const dataAPI = response.data as ResponseTask;
     dispatch(
       showAlert({
@@ -98,7 +101,9 @@ export const listTasks = createAsyncThunk('notes/list', async ({ ownerID, filter
 
 export const deleteTask = createAsyncThunk('notes/delete', async ({ ownerID, noteID }: { ownerID: string; noteID: string }, { dispatch }) => {
   try {
-    const response = await todosApi.delete(`/notes/${ownerID}/${noteID}`);
+    const response = await todosApi.delete(`/notes/${noteID}`, {
+      data: { ownerID },
+    });
 
     const dataAPI = response.data as ResponseCreateTask;
 
@@ -140,9 +145,9 @@ export const deleteTask = createAsyncThunk('notes/delete', async ({ ownerID, not
 
 export const updateTask = createAsyncThunk(
   'notes/edit',
-  async ({ ownerID, noteID, updatedTask }: { ownerID: string; noteID: string; updatedTask: TaskType }, { dispatch }) => {
+  async ({ noteID, updatedTask }: { ownerID: string; noteID: string; updatedTask: TaskType }, { dispatch }) => {
     try {
-      const response = await todosApi.put(`/notes/${ownerID}/${noteID}`, updatedTask);
+      const response = await todosApi.put(`/notes/${noteID}`, updatedTask);
 
       const dataAPI = response.data as ResponseCreateTask;
 
@@ -187,7 +192,7 @@ export const toggleStatusTask = createAsyncThunk(
   'notes/toggleStatus',
   async ({ ownerID, noteID, action }: { ownerID: string; noteID: string; action: string }, { dispatch }) => {
     try {
-      const response = await todosApi.put(`/notes/${ownerID}/${noteID}/${action}`);
+      const response = await todosApi.put(`/notes/${noteID}/${action}`, ownerID);
 
       const dataAPI = response.data as ResponseCreateTask;
 
