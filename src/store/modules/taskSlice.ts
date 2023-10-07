@@ -191,9 +191,7 @@ export const toggleStatusTask = createAsyncThunk(
   'notes/toggleStatus',
   async ({ ownerID, noteID, action }: { ownerID: string; noteID: string; action: string }, { dispatch }) => {
     try {
-      const response = await todosApi.put(`/notes/${noteID}/${action}`, {
-        params: ownerID,
-      });
+      const response = await todosApi.put(`/notes/${noteID}/${action}`, ownerID);
 
       const dataAPI = response.data as ResponseCreateTask;
 
